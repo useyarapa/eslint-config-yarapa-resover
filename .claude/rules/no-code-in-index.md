@@ -10,7 +10,7 @@ Keep entrypoint `index` files strictly dedicated to public exports and orchestra
 ## Pure Export Boundaries
 
 - Entrypoint `index.ts`, `index.mts`, or `index.js` files must act only as re-export barrels or dispatchers.
-- Re-export modules and types from dedicated internal sibling files (e.g. `doctor.mts`, `verify-tarball.mts`).
+- Re-export modules and types from dedicated internal sibling files (e.g. `verify-tarball.mts`).
 - Never author core business logic, helpers, check routines, or algorithm steps directly in an `index` file.
 - Keep implementation files focused on a single responsibility with descriptive names matching their domain role.
 
@@ -24,7 +24,7 @@ Keep entrypoint `index` files strictly dedicated to public exports and orchestra
   ```
 - Import and execute/export named symbols explicitly from sibling files:
   ```ts
-  export { runDoctor } from "./doctor.mts";
+  export { verifyTarball } from "./verify-tarball.mts";
   ```
 
 ## Verification

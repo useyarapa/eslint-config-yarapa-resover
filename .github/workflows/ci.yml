@@ -22,19 +22,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Download actionlint
-        env:
-          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
-          ACTIONLINT_VERSION: 1.7.12
-        run: |
-          set -euo pipefail
-          archive="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
-          url="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${archive}"
-          curl --fail --location --silent --show-error --output "$archive" "$url"
-          echo "${ACTIONLINT_SHA256}  ${archive}" | sha256sum --check
-          tar -xzf "$archive" actionlint
       - name: Lint GitHub Actions workflows
-        run: ./actionlint -color -pyflakes=
+        uses: rhysd/actionlint@480da5a1b3260dd4c35ee979685ae2eb962f928a # v1.7.7
+        with:
+          flags: -color -pyflakes=
 
   lint:
     name: Lint

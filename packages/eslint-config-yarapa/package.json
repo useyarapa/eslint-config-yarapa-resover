@@ -39,7 +39,6 @@
     "audit": "pnpm audit",
     "build": "tsdown",
     "check:attw": "attw --pack . --profile esm-only",
-    "check:doctor": "node scripts/doctor/doctor.mts",
     "check:publint": "publint",
     "check:verify-tarball": "node scripts/verify-tarball/verify-tarball.mts",
     "check-types": "pnpm typecheck",
