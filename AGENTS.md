@@ -4,7 +4,7 @@ Architectural and workflow constraints when working in this repository.
 
 ## Agent Guidelines
 
-- Verify changes with the narrowest applicable check and report the command and result before declaring completion.
+- Never run lint, test, build, typecheck, or verify commands unprompted. Let Git hooks (`.husky/pre-commit`, `.husky/pre-push`) and CI automate verification unless the user explicitly requests a command run.
 - Never suppress or disable a check to make it pass; fix root causes.
 - Point pull-request preparation to `CONTRIBUTING.md` and package release intent to `.changeset/README.md`.
 
