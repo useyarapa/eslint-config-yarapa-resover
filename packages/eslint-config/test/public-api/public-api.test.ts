@@ -2,21 +2,13 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { packageRoot } from "../helpers/index.js";
+import type { PublicApiPackageJson } from "./public-api.type.js";
 
-type PackageJson = {
-  bin?: Record<string, string>;
-  exports: Record<string, unknown>;
-  name: string;
-  publishConfig: {
-    access: string;
-    provenance: boolean;
-  };
-};
+import { packageRoot } from "../helpers/index.js";
 
 const packageJson = JSON.parse(
   readFileSync(path.resolve(packageRoot, "package.json"), "utf8"),
-) as PackageJson;
+) as PublicApiPackageJson;
 
 describe("public API", () => {
   it("publishes as a public scoped package with provenance", () => {
