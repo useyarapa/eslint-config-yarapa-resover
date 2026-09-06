@@ -80,24 +80,6 @@ For full architecture details and rule philosophies, refer to the [Architecture 
 
 ---
 
-## Canonical Configuration Contract
-
-`eslint.config.mjs` must contain the Quick Start template exactly. Consumer repositories must not append rules, ignores, globals, mutations, imports, or side effects. Changes to ESLint policy belong in `@yarapa/eslint-config` so every repository receives the same configuration.
-
-Add the validator to the consumer's CI scripts:
-
-```json
-{
-  "scripts": {
-    "lint:config": "yarapa-eslint-config"
-  }
-}
-```
-
-Run `pnpm lint:config` before ESLint. The command exits with status `1` when `eslint.config.mjs` is missing or differs from the canonical template. A repository must make this command a required CI check for enforcement.
-
----
-
 ## Formatting & Prettier Integration
 
 `@yarapa/eslint-config` includes deterministic code styling via `@stylistic/eslint-plugin` (semi, quotes, 2-space indentation, max line length).

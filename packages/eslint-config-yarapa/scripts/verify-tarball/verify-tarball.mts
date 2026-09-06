@@ -10,8 +10,6 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { CANONICAL_CONFIG_CONTENT } from "../../src/cli/canonical-config.ts";
-
 if (process.platform === "win32" && !process.env.PNPM_HOME) {
   throw new Error("PNPM_HOME is required for the Windows consumer smoke test");
 }
@@ -169,7 +167,15 @@ export function verifyTarball(): void {
       ].join("\n"),
     );
 
-    writeFileSync(eslintConfigPath, CANONICAL_CONFIG_CONTENT);
+    writeFileSync(
+      eslintConfigPath,
+      [
+        `import yarapa from "@yarapa/eslint-config";`,
+        "",
+        "export default yarapa;",
+        "",
+      ].join("\n"),
+    );
 
     writeFileSync(
       path.resolve(consumerDirectory, "tsconfig.json"),
@@ -196,18 +202,6 @@ export function verifyTarball(): void {
       path.resolve(consumerDirectory, "sample.ts"),
       "export const answer: number = 42;\n",
     );
-    run(pnpm, ["exec", "yarapa-eslint-config"], consumerDirectory);
-    writeFileSync(
-      eslintConfigPath,
-      [
-        `import yarapa from "@yarapa/eslint-config";`,
-        "",
-        `export default [...yarapa, { rules: { "no-console": "off" } }];`,
-        "",
-      ].join("\n"),
-    );
-    run(pnpm, ["exec", "yarapa-eslint-config"], consumerDirectory, 1);
-    writeFileSync(eslintConfigPath, CANONICAL_CONFIG_CONTENT);
     run(node, ["verify.mjs"], consumerDirectory);
     run(node, ["verify-behavior.mjs"], consumerDirectory);
     run(pnpm, ["exec", "eslint", "sample.js", "sample.ts"], consumerDirectory);

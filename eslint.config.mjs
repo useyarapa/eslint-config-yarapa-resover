@@ -26,23 +26,6 @@ export default defineConfig(
     },
   },
   {
-    files: ["packages/eslint-config-yarapa/src/cli/yarapa-eslint-config.ts"],
-    name: "yarapa/repository/published-bin-source",
-    rules: {
-      "n/hashbang": [
-        "error",
-        {
-          convertPath: {
-            "src/cli/yarapa-eslint-config.ts": [
-              String.raw`^src/cli/yarapa-eslint-config\.ts$`,
-              "dist/yarapa-eslint-config.mjs",
-            ],
-          },
-        },
-      ],
-    },
-  },
-  {
     files: [
       "packages/eslint-config-yarapa/scripts/verify-tarball/**/*.{ts,mts}",
       "packages/eslint-config-yarapa/test/behavior.test.ts",

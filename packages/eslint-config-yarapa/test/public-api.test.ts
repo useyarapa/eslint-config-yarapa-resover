@@ -34,10 +34,8 @@ describe("public API", () => {
     expect(Reflect.get(module, "default")).toEqual(expect.any(Array));
   });
 
-  it("publishes the canonical config validator as a binary", () => {
-    expect(packageJson.bin).toEqual({
-      "yarapa-eslint-config": "./dist/yarapa-eslint-config.mjs",
-    });
+  it("does not publish binary executables", () => {
+    expect(packageJson.bin).toBeUndefined();
   });
 
   it("publishes root entry and package.json exports only", () => {

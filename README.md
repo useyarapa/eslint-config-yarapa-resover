@@ -51,9 +51,9 @@ import yarapa from "@yarapa/eslint-config";
 export default yarapa;
 ```
 
-Consumer repositories must keep this file unchanged and run `yarapa-eslint-config` as a required CI check before ESLint. Rules, ignores, globals, and file scopes are maintained in the package rather than overridden locally.
+Consumer repositories use this preset directly. Rules, ignores, globals, and file scopes are maintained in the package rather than overridden locally.
 
-For CI enforcement, editor configuration, and troubleshooting, read the [Package Documentation](packages/eslint-config-yarapa/README.md).
+For editor configuration and troubleshooting, read the [Package Documentation](packages/eslint-config-yarapa/README.md).
 
 ---
 
