@@ -1,5 +1,5 @@
 {
-  "name": "yarapa-code-standard",
+  "name": "code-standard",
   "private": true,
   "description": "YARAPA monorepo for the @yarapa/eslint-config public ESLint Flat Config package.",
   "type": "module",
