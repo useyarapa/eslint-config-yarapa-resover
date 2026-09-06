@@ -31,8 +31,8 @@ Before preparing the pull request:
 5. Derive title format, required checks, release-note requirements, issue
    linking syntax, and reviewer policy only from the target repository.
 
-Do not impose Changesets, Conventional Commits, DCO, package-specific scripts,
-or any other convention unless the repository requires them.
+Do not impose commit, release, or package-specific conventions unless the
+repository requires them.
 
 ## Pre-flight Inspection
 

@@ -4,7 +4,7 @@ A comprehensive technical comparison evaluating `@yarapa/eslint-config` against 
 
 ---
 
-## 1. Global Benchmark Matrix
+## 1. Global Comparison Matrix
 
 | Feature / Standard                    | `@yarapa/eslint-config`        | `@antfu/eslint-config` | Airbnb (`airbnb-typescript`)    | Vercel (`@vercel/style-guide`) | Shopify (`@shopify/eslint-plugin`) | Google (`gts`)          |
 | :------------------------------------ | :----------------------------- | :--------------------- | :------------------------------ | :----------------------------- | :--------------------------------- | :---------------------- |
