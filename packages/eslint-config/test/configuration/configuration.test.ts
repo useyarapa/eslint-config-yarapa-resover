@@ -1,5 +1,3 @@
-import type { Linter } from "eslint";
-
 import packageJsonPlugin from "eslint-plugin-package-json";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
@@ -7,30 +5,7 @@ import { describe, expect, it } from "vitest";
 import { packageJson } from "../../src/configs/index.js";
 import yarapa from "../../src/index.js";
 import { required } from "../helpers/index.js";
-
-/**
- * Resolve the final configured value for one rule.
- * @param config Flat Config array.
- * @param ruleName Fully qualified rule name.
- * @returns The final rule entry when configured.
- */
-function findRule(
-  config: Linter.Config[],
-  ruleName: string,
-): Linter.RuleEntry | undefined {
-  let resolved: Linter.RuleEntry | undefined;
-
-  for (const entry of config) {
-    const rule = Reflect.get(entry.rules ?? {}, ruleName) as
-      Linter.RuleEntry | undefined;
-
-    if (rule !== undefined) {
-      resolved = rule;
-    }
-  }
-
-  return resolved;
-}
+import { findRule } from "./configuration.helper.js";
 
 describe("canonical public configuration", () => {
   it("exports a non-empty Flat Config array", () => {
@@ -94,6 +69,35 @@ describe("canonical public configuration", () => {
 
     expect(tsIndex).toBeGreaterThanOrEqual(0);
     expect(typeCheckedIndex).toBeGreaterThan(tsIndex);
+  });
+
+  it("scopes type declaration restrictions to TypeScript test files", () => {
+    const testFilesConfig = yarapa.find(
+      config => config.name === "yarapa/typescript/test-files",
+    );
+
+    expect(testFilesConfig).toMatchObject({
+      files: [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/*.test.mts",
+        "**/*.test.cts",
+      ],
+      rules: {
+        "no-restricted-syntax": [
+          "error",
+          {
+            message: "Move type declarations to a sibling .type.ts file.",
+            selector: "TSTypeAliasDeclaration, TSInterfaceDeclaration",
+          },
+          {
+            message: "Move helper functions to a sibling .helper.ts file.",
+            selector:
+              "Program > FunctionDeclaration, Program > VariableDeclaration > VariableDeclarator[init.type='ArrowFunctionExpression'], Program > VariableDeclaration > VariableDeclarator[init.type='FunctionExpression']",
+          },
+        ],
+      },
+    });
   });
 
   it("owns the package manifest rule policy", () => {

@@ -1,23 +1,9 @@
-import type { ESLint } from "eslint";
-
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import yarapa from "../../src/index.js";
 import { eslintForConfigs, packageRoot, required } from "../helpers/index.js";
-
-/**
- * Reduce a lint result to stable diagnostic fields for assertions.
- * @param result ESLint result to summarize.
- * @returns Stable diagnostic summary objects.
- */
-function messageSummary(result: ESLint.LintResult): object[] {
-  return result.messages.map(message => ({
-    message: message.message,
-    ruleId: message.ruleId,
-    severity: message.severity,
-  }));
-}
+import { messageSummary } from "./behavior.helper.js";
 
 describe("shared YARAPA behavior", () => {
   const eslint = eslintForConfigs(yarapa);
@@ -64,6 +50,82 @@ describe("shared YARAPA behavior", () => {
     const tsLintResult = required(tsResult, "source lint result");
     expect(tsLintResult.messages.map(message => message.ruleId)).toContain(
       "@typescript-eslint/no-empty-object-type",
+    );
+  });
+
+  it.each([
+    {
+      name: "type aliases",
+      source: "export type Contract = { name: string };\n",
+    },
+    {
+      name: "interfaces",
+      source: "export interface Contract { name: string }\n",
+    },
+  ])("moves $name out of test files", async ({ source }) => {
+    const [result] = await eslint.lintText(source, {
+      filePath: path.resolve(
+        packageRoot,
+        "test/public-api/public-api.test.ts",
+      ),
+    });
+    const lintResult = required(result, "test declaration lint result");
+    const restrictedSyntax = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-syntax",
+    );
+
+    expect(restrictedSyntax?.message).toContain("sibling .type.ts file");
+  });
+
+  it("permits type declarations in sibling type files", async () => {
+    const [result] = await eslint.lintText(
+      "export type Contract = { name: string };\n",
+      {
+        filePath: path.resolve(
+          packageRoot,
+          "test/public-api/public-api.type.ts",
+        ),
+      },
+    );
+    const lintResult = required(result, "type file lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
+      "no-restricted-syntax",
+    );
+  });
+
+  it("moves helper functions out of test files", async () => {
+    const [result] = await eslint.lintText(
+      "function helper(): boolean { return true; }\nvoid helper();\n",
+      {
+        filePath: path.resolve(
+          packageRoot,
+          "test/behavior/behavior.test.ts",
+        ),
+      },
+    );
+    const lintResult = required(result, "test helper lint result");
+    const restrictedSyntax = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-syntax",
+    );
+
+    expect(restrictedSyntax?.message).toContain("sibling .helper.ts file");
+  });
+
+  it("permits helper functions in sibling helper files", async () => {
+    const [result] = await eslint.lintText(
+      "export function helper(): boolean { return true; }\n",
+      {
+        filePath: path.resolve(
+          packageRoot,
+          "test/behavior/behavior.helper.ts",
+        ),
+      },
+    );
+    const lintResult = required(result, "helper file lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
+      "no-restricted-syntax",
     );
   });
 

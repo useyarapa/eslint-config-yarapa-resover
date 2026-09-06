@@ -4,6 +4,12 @@ import { parser, plugin } from "typescript-eslint";
 
 const TYPESCRIPT_FILES = ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"];
 const DECLARATION_FILES = ["**/*.d.ts", "**/*.d.mts", "**/*.d.cts"];
+const TEST_FILES = [
+  "**/*.test.ts",
+  "**/*.test.tsx",
+  "**/*.test.mts",
+  "**/*.test.cts",
+];
 
 const typescriptCoreReplacementRules: Linter.RulesRecord = {
   "constructor-super": "off",
@@ -82,6 +88,21 @@ const typescriptDeclarationRules: Linter.RulesRecord = {
   ],
 };
 
+const typescriptTestRules: Linter.RulesRecord = {
+  "no-restricted-syntax": [
+    "error",
+    {
+      message: "Move type declarations to a sibling .type.ts file.",
+      selector: "TSTypeAliasDeclaration, TSInterfaceDeclaration",
+    },
+    {
+      message: "Move helper functions to a sibling .helper.ts file.",
+      selector:
+        "Program > FunctionDeclaration, Program > VariableDeclaration > VariableDeclarator[init.type='ArrowFunctionExpression'], Program > VariableDeclaration > VariableDeclarator[init.type='FunctionExpression']",
+    },
+  ],
+};
+
 export const typescript: Linter.Config[] = [
   {
     files: TYPESCRIPT_FILES,
@@ -102,5 +123,10 @@ export const typescript: Linter.Config[] = [
     files: DECLARATION_FILES,
     name: "yarapa/typescript/declaration-files",
     rules: typescriptDeclarationRules,
+  },
+  {
+    files: TEST_FILES,
+    name: "yarapa/typescript/test-files",
+    rules: typescriptTestRules,
   },
 ];
