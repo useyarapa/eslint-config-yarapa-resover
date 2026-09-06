@@ -2,7 +2,7 @@
 
 Thank you for contributing to `@yarapa/eslint-config`.
 
-This repository is a pnpm workspace containing `packages/eslint-config-yarapa`, an opinionated and deterministic ESLint Flat Config package for JavaScript and TypeScript projects.
+This repository is a pnpm workspace containing `packages/eslint-config`, an opinionated and deterministic ESLint Flat Config package for JavaScript and TypeScript projects.
 
 ## Code of Conduct
 
@@ -28,9 +28,9 @@ pnpm install
 ## Development Workflow
 
 1. **Edit source and tests**:
-   - Source code: `packages/eslint-config-yarapa/src/`
-   - Tests and fixtures: `packages/eslint-config-yarapa/test/` and `packages/eslint-config-yarapa/fixtures/`
-   - Do not edit generated files under `packages/eslint-config-yarapa/dist/`.
+   - Source code: `packages/eslint-config/src/`
+   - Tests and fixtures: `packages/eslint-config/test/` and `packages/eslint-config/fixtures/`
+   - Do not edit generated files under `packages/eslint-config/dist/`.
 
 2. **Run verification**:
    - **Repository lint**: `pnpm lint` (automatically builds the package first)
@@ -41,13 +41,13 @@ pnpm install
    - **Consumer smoke test**: `pnpm --filter @yarapa/eslint-config test:consumer` (packs and verifies tarball with a consumer app)
 
 3. **Verify by change category**:
-   - **Preset rules or options**: Add test cases in `packages/eslint-config-yarapa/test/` covering both config profile composition and observable lint diagnostics.
+   - **Preset rules or options**: Add test cases in `packages/eslint-config/test/` covering both config profile composition and observable lint diagnostics.
    - **Exports or package metadata**: Run `pnpm --filter @yarapa/eslint-config test:consumer` or `pnpm --filter @yarapa/eslint-config verify`.
    - **Documentation**: Verify references, links, and markdown formatting.
 
 ## Release Intent (Changesets)
 
-If your pull request modifies `packages/eslint-config-yarapa`:
+If your pull request modifies `packages/eslint-config`:
 
 1. Run `pnpm changeset` from repository root.
 2. Select the package and appropriate semver bump (`patch`, `minor`, `major`).

@@ -13,9 +13,9 @@ This repository serves as the engineering baseline for YARAPA projects, enforcin
 
 ## Workspace Packages
 
-| Package                                                  | Version                                                                                                                   | Description                                                                    |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| [`@yarapa/eslint-config`](packages/eslint-config-yarapa) | [![npm](https://img.shields.io/npm/v/%40yarapa%2Feslint-config.svg)](https://www.npmjs.com/package/@yarapa/eslint-config) | Strict, full-stack ESLint Flat Config for JavaScript, TypeScript, and Node.js. |
+| Package                                           | Version                                                                                                                   | Description                                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`@yarapa/eslint-config`](packages/eslint-config) | [![npm](https://img.shields.io/npm/v/%40yarapa%2Feslint-config.svg)](https://www.npmjs.com/package/@yarapa/eslint-config) | Strict, full-stack ESLint Flat Config for JavaScript, TypeScript, and Node.js. |
 
 ---
 
@@ -31,7 +31,7 @@ This repository serves as the engineering baseline for YARAPA projects, enforcin
 4. **Unified Capability Baseline**
    - Combines JavaScript, TypeScript, and Node.js runtime in one deterministic configuration.
 
-For in-depth architecture, rule classifications, and plugin matrices, see [Architecture & Rules Overview](packages/eslint-config-yarapa/docs/RULES.md).
+For in-depth architecture, rule classifications, and plugin matrices, see [Architecture & Rules Overview](packages/eslint-config/docs/RULES.md).
 
 ---
 
@@ -53,7 +53,7 @@ export default yarapa;
 
 Consumer repositories use this preset directly. Rules, ignores, globals, and file scopes are maintained in the package rather than overridden locally.
 
-For editor configuration and troubleshooting, read the [Package Documentation](packages/eslint-config-yarapa/README.md).
+For editor configuration and troubleshooting, read the [Package Documentation](packages/eslint-config/README.md).
 
 ---
 

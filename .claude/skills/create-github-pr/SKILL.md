@@ -19,7 +19,7 @@ Guide agents and contributors through creating pull requests that strictly confo
 1. **Strict Template Adherence**: The pull request body must strictly contain all sections from `.github/pull_request_template.md` without omission.
 2. **Zero Emojis**: Never include emojis in PR title or PR body. Use clean ASCII text indicators (`[x]`, `[ ]`, `PASS`, `FAIL`).
 3. **Evidence-Based Verification**: Do not check verification checkboxes blindly. Run each required command, confirm the result, and mark passed items with `[x]`.
-4. **Changeset Compliance**: Identify whether changes affect `packages/eslint-config-yarapa`. If yes, require a Changeset; if no package impact, require an empty Changeset (`pnpm changeset --empty`).
+4. **Changeset Compliance**: Identify whether changes affect `packages/eslint-config`. If yes, require a Changeset; if no package impact, require an empty Changeset (`pnpm changeset --empty`).
 
 ---
 
@@ -68,7 +68,7 @@ Verify whether a changeset file exists under `.changeset/*.md`:
 pnpm changeset:status
 ```
 
-- If changes affect `packages/eslint-config-yarapa/`, ensure a valid changeset is committed.
+- If changes affect `packages/eslint-config/`, ensure a valid changeset is committed.
 - If changes have no package release impact (e.g. repo tooling, docs, CI), run:
   ```sh
   pnpm changeset --empty

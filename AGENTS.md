@@ -10,18 +10,18 @@ Architectural and workflow constraints when working in this repository.
 
 ## Architecture & Build Boundaries
 
-- `packages/eslint-config-yarapa` is a strict, deterministic ESLint Flat Config package. Source lives in `packages/eslint-config-yarapa/src/`; generated artifacts live in `packages/eslint-config-yarapa/dist/`.
+- `packages/eslint-config` is a strict, deterministic ESLint Flat Config package. Source lives in `packages/eslint-config/src/`; generated artifacts live in `packages/eslint-config/dist/`.
 - Edit `src/` and tests, never generated `dist/` files.
-- The root `eslint.config.mjs` consumes built package output from `packages/eslint-config-yarapa/dist/index.mjs`. Root linting therefore requires a package build first. Use `pnpm lint` (which builds first) or build the package before invoking ESLint directly at repository root. Package-scoped linting (`pnpm --filter @yarapa/eslint-config lint`) lints source files directly.
+- The root `eslint.config.mjs` consumes built package output from `packages/eslint-config/dist/index.mjs`. Root linting therefore requires a package build first. Use `pnpm lint` (which builds first) or build the package before invoking ESLint directly at repository root. Package-scoped linting (`pnpm --filter @yarapa/eslint-config lint`) lints source files directly.
 
 ## Verification Requirements
 
-- Preset changes: add or update tests for both config composition / profile shape and at least one observable lint behavior in `packages/eslint-config-yarapa/test/`.
+- Preset changes: add or update tests for both config composition / profile shape and at least one observable lint behavior in `packages/eslint-config/test/`.
 - Export or package metadata changes: run `pnpm --filter @yarapa/eslint-config test:consumer` (or `verify`), which tests the packed tarball against a real consumer project.
 
 ## Testing Architecture & Fixture Policy
 
-- Fixtures in `packages/eslint-config-yarapa/fixtures/` are static declarative test inputs for ESLint Flat Config integration testing.
+- Fixtures in `packages/eslint-config/fixtures/` are static declarative test inputs for ESLint Flat Config integration testing.
 - Type-aware testing requires concrete disk fixtures with `tsconfig.json` to configure TypeScript compiler services deterministically.
 - Do not replace static declarative fixtures with bespoke dynamic setup, temporary filesystem generation, or bespoke mock harnesses.
 - Follow official ESLint test patterns and maintained capabilities.

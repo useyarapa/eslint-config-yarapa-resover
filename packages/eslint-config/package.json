@@ -9,14 +9,14 @@
     "flat-config",
     "typescript"
   ],
-  "homepage": "https://github.com/useyarapa/eslint-config-yarapa/tree/main/packages/eslint-config-yarapa",
+  "homepage": "https://github.com/useyarapa/eslint-config-yarapa/tree/main/packages/eslint-config",
   "bugs": {
     "url": "https://github.com/useyarapa/eslint-config-yarapa/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/useyarapa/eslint-config-yarapa.git",
-    "directory": "packages/eslint-config-yarapa"
+    "directory": "packages/eslint-config"
   },
   "license": "MIT",
   "author": "YARAPA",

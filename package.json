@@ -10,7 +10,7 @@
     "changeset:status": "changeset status --since main",
     "check:attw": "turbo run check:attw",
     "check:publint": "turbo run check:publint",
-    "check:verify-tarball": "node packages/eslint-config-yarapa/scripts/verify-tarball/verify-tarball.mts",
+    "check:verify-tarball": "node packages/eslint-config/scripts/verify-tarball/verify-tarball.mts",
     "check-types": "pnpm typecheck",
     "clean": "turbo run clean && rm -rf .turbo node_modules/.cache",
     "clean:dist": "turbo run clean:dist",
