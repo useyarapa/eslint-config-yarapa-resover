@@ -228,7 +228,7 @@ describe("shared YARAPA behavior", () => {
     expect(restrictedMessage?.message).toContain("es-toolkit");
   });
 
-  it("requires description for eslint-disable comments", async () => {
+  it("rejects eslint-disable comments via noInlineConfig while validating comments policy", async () => {
     const [result] = await eslint.lintText(
       "/* eslint-disable no-var */\nvar x = 1;\n",
       { filePath: javascriptFixture },
@@ -238,6 +238,11 @@ describe("shared YARAPA behavior", () => {
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
       "@eslint-community/eslint-comments/require-description",
     );
+    expect(
+      lintResult.messages.some(message =>
+        message.message.includes("'noInlineConfig' setting"),
+      ),
+    ).toBe(true);
   });
 
   it.each([

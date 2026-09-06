@@ -65,6 +65,17 @@ describe("canonical public configuration", () => {
     expect(configNames).toContain("yarapa/perfectionist");
   });
 
+  it("enforces zero inline suppression policy via linterOptions", () => {
+    const baseCoreConfig = yarapa.find(
+      config => config.name === "yarapa/base/core",
+    );
+
+    expect(baseCoreConfig?.linterOptions).toEqual({
+      noInlineConfig: true,
+      reportUnusedDisableDirectives: "error",
+    });
+  });
+
   it("registers @typescript-eslint plugin only in the typescript owner entry", () => {
     const configsWithTsPlugin = yarapa.filter(config =>
       Boolean(

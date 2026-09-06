@@ -8,7 +8,7 @@ A comprehensive technical comparison evaluating `@yarapa/eslint-config` against 
 
 | Feature / Standard                    | `@yarapa/eslint-config`        | `@antfu/eslint-config` | Airbnb (`airbnb-typescript`)    | Vercel (`@vercel/style-guide`) | Shopify (`@shopify/eslint-plugin`) | Google (`gts`)          |
 | :------------------------------------ | :----------------------------- | :--------------------- | :------------------------------ | :----------------------------- | :--------------------------------- | :---------------------- |
-| **Native ESLint 9/10 Flat Config**    | **YES (100% Pure Arrays)**     | YES (Factory Function) | NO (Legacy .eslintrc)           | PARTIAL (In progress)          | NO (Legacy .eslintrc)              | NO (Legacy .eslintrc)   |
+| **Native ESLint 10 Flat Config**      | **YES (100% Pure Arrays)**     | YES (Factory Function) | NO (Legacy .eslintrc)           | PARTIAL (In progress)          | NO (Legacy .eslintrc)              | NO (Legacy .eslintrc)   |
 | **Type-Aware via `projectService`**   | **YES (Built-in First-Class)** | PARTIAL (Opt-in only)  | NO (Slow parserOptions.project) | PARTIAL (Opt-in only)          | NO (Slow legacy parser)            | PARTIAL (Opt-in only)   |
 | **Cognitive Complexity (`sonarjs`)**  | **YES (Integrated)**           | NO                     | NO                              | NO                             | NO                                 | NO                      |
 | **Anti-ReDoS Protection (`regexp`)**  | **YES (Integrated)**           | NO                     | NO                              | NO                             | NO                                 | NO                      |

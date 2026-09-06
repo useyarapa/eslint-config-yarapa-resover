@@ -126,6 +126,10 @@ const modernJavaScriptRules: Linter.RulesRecord = {
 
 export const base: Linter.Config[] = [
   {
+    linterOptions: {
+      noInlineConfig: true,
+      reportUnusedDisableDirectives: "error",
+    },
     name: "yarapa/base/core",
     rules: coreRules,
   },

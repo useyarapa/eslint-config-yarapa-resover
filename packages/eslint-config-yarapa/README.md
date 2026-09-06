@@ -13,7 +13,7 @@ Opinionated, deterministic ESLint Flat Config standards for modern JavaScript an
 
 ## Features
 
-- **Strict Flat Config First**: Pre-configured, deterministic arrays compatible with ESLint 9+ and 10+.
+- **Strict Flat Config First**: Pre-configured, deterministic arrays built for ESLint 10+.
 - **Unified Baseline**: Integrates JavaScript, TypeScript, Node.js runtime (`eslint-plugin-n`), and Node/Browser globals in one setup.
 - **Type-Aware First**: Native integration with TypeScript's `projectService` for accurate, AST-driven type analysis without manual `tsconfig.json` overhead.
 - **Unified Style**: Integrated `@stylistic/eslint-plugin` rules with zero format suppression allowed.
