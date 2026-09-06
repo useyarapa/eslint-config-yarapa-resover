@@ -3,9 +3,8 @@ import type { ESLint } from "eslint";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import yarapa from "../src/index.js";
-import { required } from "../src/utils/compat.js";
-import { eslintForConfigs, packageRoot } from "./helpers/eslint.js";
+import yarapa from "../../src/index.js";
+import { eslintForConfigs, packageRoot, required } from "../helpers/index.js";
 
 /**
  * Reduce a lint result to stable diagnostic fields for assertions.

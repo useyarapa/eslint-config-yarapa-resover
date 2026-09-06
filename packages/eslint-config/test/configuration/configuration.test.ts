@@ -4,9 +4,9 @@ import packageJsonPlugin from "eslint-plugin-package-json";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
-import { packageJson } from "../src/configs/package-json.js";
-import yarapa from "../src/index.js";
-import { required } from "../src/utils/compat.js";
+import { packageJson } from "../../src/configs/index.js";
+import yarapa from "../../src/index.js";
+import { required } from "../helpers/index.js";
 
 /**
  * Resolve the final configured value for one rule.

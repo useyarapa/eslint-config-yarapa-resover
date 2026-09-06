@@ -1,17 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-const currentDir = path.dirname(fileURLToPath(import.meta.url));
-const configsDir = path.resolve(currentDir, "../src/configs");
+import { configsDir } from "../helpers/index.js";
 
 describe("static rule policy guard", () => {
   it("forbids upstream preset access and extends in production configs", () => {
-    const configFiles = fs
-      .readdirSync(configsDir)
-      .filter(file => file.endsWith(".ts"))
-      .map(file => path.join(configsDir, file));
+    const subdirectories = fs
+      .readdirSync(configsDir, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+
+    const configFiles = subdirectories
+      .map(sub => path.join(configsDir, sub, `${sub}.ts`))
+      .filter(filePath => fs.existsSync(filePath));
 
     const forbiddenPatterns = [
       /\.configs[.[\]]/u,
@@ -36,7 +38,7 @@ describe("static rule policy guard", () => {
   });
 
   it("keeps yarapa.ts orchestration-only", () => {
-    const yarapaPath = path.join(configsDir, "yarapa.ts");
+    const yarapaPath = path.join(configsDir, "yarapa/yarapa.ts");
     const content = fs.readFileSync(yarapaPath, "utf8");
 
     expect(content).not.toMatch(/\brules\s*:/u);

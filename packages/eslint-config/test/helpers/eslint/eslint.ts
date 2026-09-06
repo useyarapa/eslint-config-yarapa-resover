@@ -1,9 +1,8 @@
 import type { Linter } from "eslint";
 
 import { ESLint } from "eslint";
-import { fileURLToPath } from "node:url";
 
-export const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
+import { packageRoot } from "../paths/index.js";
 
 /**
  * Create ESLint over an explicit Flat Config array.

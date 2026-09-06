@@ -1,1 +1,1 @@
-export { yarapa as default } from "./configs/yarapa.js";
+export { yarapa as default } from "./configs/index.js";

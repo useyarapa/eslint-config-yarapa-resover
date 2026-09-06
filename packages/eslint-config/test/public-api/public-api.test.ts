@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { packageRoot } from "./helpers/eslint.js";
+import { packageRoot } from "../helpers/index.js";
 
 type PackageJson = {
   bin?: Record<string, string>;
@@ -28,7 +28,7 @@ describe("public API", () => {
   });
 
   it("exports only the canonical default configuration", async () => {
-    const module = await import("../src/index.js");
+    const module = await import("../../src/index.js");
 
     expect(Object.keys(module)).toEqual(["default"]);
     expect(Reflect.get(module, "default")).toEqual(expect.any(Array));

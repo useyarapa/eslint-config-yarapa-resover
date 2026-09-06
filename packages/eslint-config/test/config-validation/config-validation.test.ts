@@ -1,8 +1,8 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import yarapa from "../src/index.js";
-import { eslintForConfigs, packageRoot } from "./helpers/eslint.js";
+import yarapa from "../../src/index.js";
+import { eslintForConfigs, packageRoot } from "../helpers/index.js";
 
 const sampleFiles = [
   "fixtures/projects/typed/src/valid.ts",
