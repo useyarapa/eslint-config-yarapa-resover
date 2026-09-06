@@ -36,7 +36,7 @@ Use this type when reporting incorrect diagnostics, runtime crashes, compatibili
 
 **Required Fields**:
 
-- **Version**: `@yarapa/eslint-config` version (e.g. `0.3.0`).
+- **Version**: `@yarapa/eslint-config` version (e.g. `0.1.0`).
 - **Environment**: Node.js version, ESLint version, TypeScript version, OS, package manager, and profile used (`next`, `react`, `nest`, or default).
 - **Minimal reproduction**: Public reproduction repo or minimal sanitized config snippet.
 - **Expected behavior**: What should have happened.
@@ -49,7 +49,7 @@ Use this type when reporting incorrect diagnostics, runtime crashes, compatibili
 gh issue create --title "bug: <concise summary>" --body "$(cat <<'EOF'
 ### @yarapa/eslint-config version
 
-0.3.0
+0.1.0
 
 ### Environment
 
