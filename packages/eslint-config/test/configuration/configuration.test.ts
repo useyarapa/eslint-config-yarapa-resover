@@ -1,4 +1,5 @@
 import packageJsonPlugin from "eslint-plugin-package-json";
+import { rules as perfectionistRules } from "eslint-plugin-perfectionist";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
@@ -111,6 +112,21 @@ describe("canonical public configuration", () => {
     expect(new Set(Object.values(config.rules ?? {}))).toEqual(
       new Set(["error"]),
     );
+  });
+
+  it("enables every installed perfectionist rule", () => {
+    const config = required(
+      yarapa.find(entry => entry.name === "yarapa/perfectionist"),
+      "perfectionist config",
+    );
+    const configuredRules = new Set(Object.keys(config.rules ?? {}));
+    const availableRules = new Set(
+      Object.keys(perfectionistRules ?? {}).map(
+        ruleName => `perfectionist/${ruleName}`,
+      ),
+    );
+
+    expect(configuredRules).toEqual(availableRules);
   });
 
   it("owns import-x rule and settings policy", () => {
