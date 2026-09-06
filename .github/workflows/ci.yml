@@ -23,9 +23,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Lint GitHub Actions workflows
-        uses: rhysd/actionlint@480da5a1b3260dd4c35ee979685ae2eb962f928a # v1.7.7
+        uses: reviewdog/action-actionlint@d290e336d5a743810aef4404f757dc862276d2ae # v1.73.4
         with:
-          flags: -color -pyflakes=
+          actionlint_flags: -color -pyflakes=
 
   lint:
     name: Lint
