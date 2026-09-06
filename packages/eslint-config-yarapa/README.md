@@ -158,11 +158,9 @@ When running type-aware rules, ESLint must resolve project configuration relativ
 pnpm exec eslint .
 ```
 
-The package owns `projectService` and file-scope policy. Unsupported repository layouts require a central change to `@yarapa/eslint-config`, not a consumer override.
-
 ### 2. Can I use `eslint-disable` comments?
 
-Inline rule suppressions are prohibited. Fix diagnostics at their source. Generated-file ignores and project-wide policy changes must be added to `@yarapa/eslint-config`, not to a consumer's `eslint.config.mjs`.
+Inline rule suppressions are disabled at the engine level (`noInlineConfig: true`). Fix diagnostics at their source rather than suppressing them with inline directives. If you need to ignore specific generated artifacts or third-party outputs, declare them using standard ESLint `ignores` in your `eslint.config.mjs`.
 
 ---
 
