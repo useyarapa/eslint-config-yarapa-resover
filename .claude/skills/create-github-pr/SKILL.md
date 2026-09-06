@@ -35,7 +35,7 @@ git diff main...HEAD
 git log main...HEAD --oneline
 ```
 
-Verify that all commits follow Conventional Commits and satisfy DCO (`Signed-off-by`).
+Verify that all commits follow the repository's commit-message policy.
 
 ### Step 2: Execute Verification Checklist
 
