@@ -2,6 +2,11 @@ import type { Linter } from "eslint";
 
 import jsdocPlugin from "eslint-plugin-jsdoc";
 
+import {
+  JAVASCRIPT_FILES,
+  TYPESCRIPT_FILES,
+} from "../constants/index.js";
+
 const jsdocJavaScriptRules: Linter.RulesRecord = {
   "jsdoc/check-access": "error",
   "jsdoc/check-alignment": "error",
@@ -164,13 +169,13 @@ const jsdocTypeScriptRules: Linter.RulesRecord = {
 
 export const jsdoc: Linter.Config[] = [
   {
-    files: ["**/*.js", "**/*.mjs", "**/*.cjs", "**/*.jsx"],
+    files: JAVASCRIPT_FILES,
     name: "yarapa/jsdoc/javascript",
     plugins: { jsdoc: jsdocPlugin },
     rules: jsdocJavaScriptRules,
   },
   {
-    files: ["**/*.ts", "**/*.mts", "**/*.cts", "**/*.tsx"],
+    files: TYPESCRIPT_FILES,
     name: "yarapa/jsdoc/typescript",
     plugins: { jsdoc: jsdocPlugin },
     rules: jsdocTypeScriptRules,

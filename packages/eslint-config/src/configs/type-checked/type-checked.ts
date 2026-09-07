@@ -1,6 +1,6 @@
 import type { Linter } from "eslint";
 
-const TYPESCRIPT_FILES = ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"];
+import { TYPESCRIPT_FILES } from "../constants/index.js";
 
 const typeCheckedCoreReplacementRules: Linter.RulesRecord = {
   "dot-notation": "off",

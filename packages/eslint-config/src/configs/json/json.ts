@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import jsoncPlugin from "eslint-plugin-jsonc";
 
+import { JSON5_FILES, JSON_FILES } from "../constants/index.js";
+
 const jsoncCompatibilityRules: Linter.RulesRecord = {
   "no-unused-expressions": "off",
   "no-unused-vars": "off",
@@ -54,14 +56,7 @@ export const json: Linter.Config[] = [
     plugins: { jsonc: jsoncPlugin },
   },
   {
-    files: [
-      "*.json",
-      "**/*.json",
-      "*.json5",
-      "**/*.json5",
-      "*.jsonc",
-      "**/*.jsonc",
-    ],
+    files: JSON_FILES,
     language: "jsonc/x",
     name: "yarapa/json/strict-off",
     rules: jsoncCompatibilityRules,
@@ -71,7 +66,7 @@ export const json: Linter.Config[] = [
     rules: jsoncRules,
   },
   {
-    files: ["*.json5", "**/*.json5"],
+    files: JSON5_FILES,
     name: "yarapa/json/json5-trailing-comma",
     rules: json5TrailingCommaRules,
   },

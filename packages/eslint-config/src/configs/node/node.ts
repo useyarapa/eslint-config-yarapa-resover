@@ -3,6 +3,8 @@ import type { Linter } from "eslint";
 import nPlugin from "eslint-plugin-n";
 import globals from "globals";
 
+import { NODE_RESOLUTION_EXTENSIONS } from "../constants/index.js";
+
 const nodeRules: Linter.RulesRecord = {
   "n/hashbang": "error",
   "n/no-deprecated-api": "error",
@@ -38,18 +40,7 @@ export const node: Linter.Config[] = [
     rules: nodeRules,
     settings: {
       node: {
-        tryExtensions: [
-          ".js",
-          ".jsx",
-          ".mjs",
-          ".cjs",
-          ".json",
-          ".node",
-          ".ts",
-          ".tsx",
-          ".mts",
-          ".cts",
-        ],
+        tryExtensions: NODE_RESOLUTION_EXTENSIONS,
       },
     },
   },

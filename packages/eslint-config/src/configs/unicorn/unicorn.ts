@@ -2,16 +2,7 @@ import type { Linter } from "eslint";
 
 import unicornPlugin from "eslint-plugin-unicorn";
 
-const JAVASCRIPT_AND_TYPESCRIPT_FILES = [
-  "**/*.js",
-  "**/*.mjs",
-  "**/*.cjs",
-  "**/*.jsx",
-  "**/*.ts",
-  "**/*.mts",
-  "**/*.cts",
-  "**/*.tsx",
-];
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
 
 const unicornGlobals: Record<string, boolean> = {
   AggregateError: false,

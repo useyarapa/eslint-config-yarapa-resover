@@ -2,14 +2,11 @@ import type { Linter } from "eslint";
 
 import { parser, plugin } from "typescript-eslint";
 
-const TYPESCRIPT_FILES = ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"];
-const DECLARATION_FILES = ["**/*.d.ts", "**/*.d.mts", "**/*.d.cts"];
-const TEST_FILES = [
-  "**/*.test.ts",
-  "**/*.test.tsx",
-  "**/*.test.mts",
-  "**/*.test.cts",
-];
+import {
+  TYPESCRIPT_DECLARATION_FILES,
+  TYPESCRIPT_FILES,
+  TYPESCRIPT_TEST_FILES,
+} from "../constants/index.js";
 
 const typescriptCoreReplacementRules: Linter.RulesRecord = {
   "constructor-super": "off",
@@ -120,12 +117,12 @@ export const typescript: Linter.Config[] = [
     },
   },
   {
-    files: DECLARATION_FILES,
+    files: TYPESCRIPT_DECLARATION_FILES,
     name: "yarapa/typescript/declaration-files",
     rules: typescriptDeclarationRules,
   },
   {
-    files: TEST_FILES,
+    files: TYPESCRIPT_TEST_FILES,
     name: "yarapa/typescript/test-files",
     rules: typescriptTestRules,
   },
