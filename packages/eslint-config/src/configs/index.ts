@@ -16,4 +16,5 @@ export { typeChecked } from "./type-checked/index.js";
 export { typescript } from "./typescript/index.js";
 export { unicorn } from "./unicorn/index.js";
 export { unusedImports } from "./unused-imports/index.js";
+export { vitest } from "./vitest/index.js";
 export { yarapa } from "./yarapa/index.js";

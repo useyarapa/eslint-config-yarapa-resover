@@ -1,9 +1,11 @@
+import vitestPlugin from "@vitest/eslint-plugin";
 import packageJsonPlugin from "eslint-plugin-package-json";
 import { rules as perfectionistRules } from "eslint-plugin-perfectionist";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
-import { packageJson } from "../../src/configs/index.js";
+import { TYPESCRIPT_TEST_FILES } from "../../src/configs/constants/index.js";
+import { packageJson, vitest } from "../../src/configs/index.js";
 import yarapa from "../../src/index.js";
 import { required } from "../helpers/index.js";
 import { findRule } from "./configuration.helper.js";
@@ -40,6 +42,7 @@ describe("canonical public configuration", () => {
     expect(configNames).toContain("yarapa/import-x");
     expect(configNames).toContain("yarapa/sonarjs");
     expect(configNames).toContain("yarapa/perfectionist");
+    expect(configNames).toContain("yarapa/vitest");
   });
 
   it("enforces zero inline suppression policy via linterOptions", () => {
@@ -128,6 +131,32 @@ describe("canonical public configuration", () => {
     );
 
     expect(configuredRules).toEqual(availableRules);
+  });
+
+  it("enables every installed vitest rule scoped to test files", () => {
+    const config = required(
+      yarapa.find(entry => entry.name === "yarapa/vitest"),
+      "vitest config",
+    );
+    const configuredRules = new Set(Object.keys(config.rules ?? {}));
+    const availableRules = new Set(
+      Object.keys(vitestPlugin.rules ?? {}).map(
+        ruleName => `vitest/${ruleName}`,
+      ),
+    );
+
+    expect(configuredRules).toEqual(availableRules);
+    expect(configuredRules.size).toBe(82);
+    expect(config.files).toEqual(TYPESCRIPT_TEST_FILES);
+  });
+
+  it("owns the vitest rule policy", () => {
+    const config = required(vitest[0], "vitest config");
+
+    expect(vitest).toHaveLength(1);
+    expect(config.files).toEqual(TYPESCRIPT_TEST_FILES);
+    expect(config.plugins?.vitest).toBe(vitestPlugin);
+    expect(Object.keys(config.rules ?? {})).toHaveLength(82);
   });
 
   it("owns import-x rule and settings policy", () => {

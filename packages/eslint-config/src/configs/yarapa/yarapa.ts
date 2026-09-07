@@ -18,6 +18,7 @@ import { typeChecked } from "../type-checked/index.js";
 import { typescript } from "../typescript/index.js";
 import { unicorn } from "../unicorn/index.js";
 import { unusedImports } from "../unused-imports/index.js";
+import { vitest } from "../vitest/index.js";
 
 export const yarapa: Linter.Config[] = [
   ...ignores,
@@ -38,4 +39,5 @@ export const yarapa: Linter.Config[] = [
   ...stylistic,
   ...unicorn,
   ...perfectionist,
+  ...vitest,
 ];

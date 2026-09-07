@@ -363,4 +363,19 @@ describe("shared YARAPA behavior", () => {
       "jsonc/no-dupe-keys",
     );
   });
+
+  it(
+    "reports focused test violations through yarapa vitest policy",
+    async () => {
+      const testSource = "describe.only(\"sample\", () => {});\n";
+      const [result] = await eslint.lintText(testSource, {
+        filePath: path.resolve(projectRoot, "src/sample.test.ts"),
+      });
+      const lintResult = required(result, "vitest behavior result");
+
+      expect(lintResult.messages.map(message => message.ruleId)).toContain(
+        "vitest/no-focused-tests",
+      );
+    },
+  );
 });
