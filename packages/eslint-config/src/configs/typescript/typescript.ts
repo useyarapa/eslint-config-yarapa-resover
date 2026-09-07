@@ -31,11 +31,7 @@ const typescriptCoreReplacementRules: Linter.RulesRecord = {
   "no-unsafe-negation": "off",
   "no-unused-expressions": "off",
   "no-unused-vars": "off",
-  "no-var": "error",
   "no-with": "off",
-  "prefer-const": "error",
-  "prefer-rest-params": "error",
-  "prefer-spread": "error",
 };
 
 const typescriptPolicyRules: Linter.RulesRecord = {

@@ -5,11 +5,8 @@ import regexpPlugin from "eslint-plugin-regexp";
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
 
 const regexpRules: Linter.RulesRecord = {
-  "no-control-regex": "error",
   "no-empty-character-class": "off",
   "no-invalid-regexp": "off",
-  "no-misleading-character-class": "error",
-  "no-regex-spaces": "error",
   "no-useless-backreference": "off",
   "prefer-regex-literals": "error",
   "regexp/confusing-quantifier": "error",
