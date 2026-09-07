@@ -26,6 +26,7 @@ describe("canonical public configuration", () => {
 
   it("uses canonical capability names without preset tiers", () => {
     const presetName = ["recom", "mended"].join("");
+
     const tierNames = yarapa
       .map(config => config.name)
       .filter(name => name?.includes(presetName));
@@ -131,7 +132,9 @@ describe("canonical public configuration", () => {
       yarapa.find(entry => entry.name === "yarapa/perfectionist"),
       "perfectionist config",
     );
+
     const configuredRules = new Set(Object.keys(config.rules ?? {}));
+
     const availableRules = new Set(
       Object.keys(perfectionistRules ?? {}).map(
         ruleName => `perfectionist/${ruleName}`,
@@ -146,7 +149,9 @@ describe("canonical public configuration", () => {
       yarapa.find(entry => entry.name === "yarapa/vitest"),
       "vitest config",
     );
+
     const configuredRules = new Set(Object.keys(config.rules ?? {}));
+
     const availableRules = new Set(
       Object.keys(vitestPlugin.rules ?? {}).map(
         ruleName => `vitest/${ruleName}`,
@@ -169,6 +174,7 @@ describe("canonical public configuration", () => {
 
   it("owns import-x rule and settings policy", () => {
     const config = yarapa.find(c => c.name === "yarapa/import-x");
+
     expect(config).toBeDefined();
     expect(config?.rules?.["import-x/no-duplicates"]).toBe("error");
     expect(config?.settings?.["import-x/resolver"]).toEqual({
@@ -180,6 +186,7 @@ describe("canonical public configuration", () => {
     const hasNodePlugin = yarapa.some(config =>
       Boolean(config.plugins && Reflect.has(config.plugins, "n")),
     );
+
     expect(hasNodePlugin).toBe(true);
 
     const hasBrowserGlobals = yarapa.some(config => {
@@ -189,6 +196,7 @@ describe("canonical public configuration", () => {
         ? Reflect.has(configuredGlobals, "window")
         : false;
     });
+
     expect(hasBrowserGlobals).toBe(true);
   });
 
@@ -196,6 +204,7 @@ describe("canonical public configuration", () => {
     const unicornConfig = yarapa.find(
       config => config.name === "yarapa/unicorn",
     );
+
     expect(unicornConfig?.languageOptions?.globals).toEqual(globals.builtin);
   });
 
@@ -204,6 +213,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/unicorn"),
       "unicorn config",
     );
+
     const reactConfig = required(
       yarapa.find(config => config.name === "yarapa/unicorn/react"),
       "unicorn React config",
@@ -243,6 +253,7 @@ describe("canonical public configuration", () => {
 
   it("shares canonical handwriting across configuration", () => {
     for (const ruleName of [
+      "@stylistic/padding-line-between-statements",
       "@stylistic/semi",
       "@typescript-eslint/consistent-type-imports",
       "@typescript-eslint/default-param-last",
@@ -266,6 +277,7 @@ describe("canonical public configuration", () => {
       "radix",
     ]) {
       const resolved = findRule(yarapa, ruleName);
+
       expect(resolved).toBeDefined();
     }
   });
@@ -296,6 +308,7 @@ describe("canonical public configuration", () => {
     const commentsConfig = yarapa.find(
       config => config.name === "yarapa/eslint-comments",
     );
+
     expect(
       commentsConfig?.rules?.["@eslint-community/eslint-comments/no-use"],
     ).toEqual(["error", { allow: [] }]);
@@ -303,6 +316,7 @@ describe("canonical public configuration", () => {
     const tsConfig = yarapa.find(
       config => config.name === "yarapa/typescript",
     );
+
     expect(
       tsConfig?.rules?.["@typescript-eslint/ban-ts-comment"],
     ).toEqual([
@@ -322,6 +336,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/typescript/barrel-files"),
       "barrel files config",
     );
+
     expect(barrelConfig.files).toEqual(INDEX_FILES);
     expect(barrelConfig.rules?.["no-restricted-syntax"]).toBeDefined();
 
@@ -329,6 +344,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/typescript/no-plain-js"),
       "no plain js config",
     );
+
     expect(plainJsConfig.files).toEqual(PLAIN_JAVASCRIPT_FILES);
     expect(plainJsConfig.ignores).toEqual(["**/fixtures/**"]);
     expect(plainJsConfig.rules?.["no-restricted-syntax"]).toBeDefined();
@@ -339,6 +355,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/unicorn"),
       "unicorn config",
     );
+
     expect(unicornConfig.rules?.["unicorn/string-content"]).toBeDefined();
   });
 
@@ -347,6 +364,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/base/modern-js"),
       "base modern js config",
     );
+
     expect(baseModernConfig.rules?.["no-inline-comments"]).toBe("error");
     expect(baseModernConfig.rules?.["no-warning-comments"]).toBeDefined();
     expect(baseModernConfig.rules?.["max-lines"]).toEqual([
@@ -360,6 +378,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/typescript/colocation"),
       "typescript colocation config",
     );
+
     expect(colocationConfig.files).toEqual(TYPESCRIPT_FILES);
     expect(colocationConfig.ignores).toEqual(TYPESCRIPT_COLOCATION_IGNORES);
     expect(colocationConfig.rules?.["no-restricted-syntax"]).toBeDefined();
@@ -370,6 +389,7 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/base/modern-js"),
       "base modern js config",
     );
+
     expect(baseModernConfig.rules?.["no-restricted-imports"]).toBeDefined();
     expect(baseModernConfig.rules?.["no-restricted-syntax"]).toBeDefined();
   });
@@ -379,9 +399,21 @@ describe("canonical public configuration", () => {
       yarapa.find(config => config.name === "yarapa/sonarjs"),
       "sonarjs config",
     );
+
     expect(sonarConfig.rules?.["sonarjs/no-duplicate-string"]).toEqual([
       "error",
       { ignoreStrings: "application/json", threshold: 3 },
     ]);
+  });
+
+  it("enforces statement padding policy in stylistic config", () => {
+    const stylisticConfig = required(
+      yarapa.find(config => config.name === "yarapa/stylistic"),
+      "stylistic config",
+    );
+
+    expect(
+      stylisticConfig.rules?.["@stylistic/padding-line-between-statements"],
+    ).toBeDefined();
   });
 });

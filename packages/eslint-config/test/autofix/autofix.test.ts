@@ -102,6 +102,7 @@ describe("autofix safety and idempotence", () => {
       null,
       2,
     )}\n`;
+
     const output = await fixTwice(
       yarapa,
       source,

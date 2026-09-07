@@ -7,16 +7,19 @@ import { messageSummary } from "./behavior.helper.js";
 
 describe("shared YARAPA behavior", () => {
   const eslint = eslintForConfigs(yarapa);
+
   const javascriptFixture = path.resolve(
     packageRoot,
     "fixtures/projects/untyped/index.js",
   );
+
   const projectRoot = path.resolve(packageRoot, "fixtures/projects/typed");
 
   it("accepts a typed project source file", async () => {
     const [result] = await eslint.lintFiles(
       path.resolve(projectRoot, "src/valid.ts"),
     );
+
     const summary = messageSummary(required(result, "typed valid lint result"));
 
     expect(summary, JSON.stringify(summary, null, 2)).toEqual([]);
@@ -26,6 +29,7 @@ describe("shared YARAPA behavior", () => {
     const [result] = await eslint.lintFiles(
       path.resolve(projectRoot, "src/invalid.ts"),
     );
+
     const lintResult = required(result, "typed invalid lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -35,19 +39,25 @@ describe("shared YARAPA behavior", () => {
 
   it("permits empty interfaces in declaration files but reports in source", async () => {
     const declarationSource = "export interface Marker {}\n";
+
     const [dtsResult] = await eslint.lintText(declarationSource, {
       filePath: path.resolve(projectRoot, "src/types.d.ts"),
     });
+
     const dtsLintResult = required(dtsResult, "declaration lint result");
+
     expect(dtsLintResult.messages.map(message => message.ruleId)).not.toContain(
       "@typescript-eslint/no-empty-object-type",
     );
 
     const source = "export interface Marker {}\n";
+
     const [tsResult] = await eslint.lintText(source, {
       filePath: path.resolve(projectRoot, "src/valid.ts"),
     });
+
     const tsLintResult = required(tsResult, "source lint result");
+
     expect(tsLintResult.messages.map(message => message.ruleId)).toContain(
       "@typescript-eslint/no-empty-object-type",
     );
@@ -69,7 +79,9 @@ describe("shared YARAPA behavior", () => {
         "test/public-api/public-api.test.ts",
       ),
     });
+
     const lintResult = required(result, "test declaration lint result");
+
     const restrictedSyntax = lintResult.messages.find(
       message => message.ruleId === "no-restricted-syntax",
     );
@@ -87,6 +99,7 @@ describe("shared YARAPA behavior", () => {
         ),
       },
     );
+
     const lintResult = required(result, "type file lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
@@ -104,7 +117,9 @@ describe("shared YARAPA behavior", () => {
         ),
       },
     );
+
     const lintResult = required(result, "test helper lint result");
+
     const restrictedSyntax = lintResult.messages.find(
       message => message.ruleId === "no-restricted-syntax",
     );
@@ -122,6 +137,7 @@ describe("shared YARAPA behavior", () => {
         ),
       },
     );
+
     const lintResult = required(result, "helper file lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
@@ -133,6 +149,7 @@ describe("shared YARAPA behavior", () => {
     const [result] = await eslint.lintText("const unused = 1;\n", {
       filePath: javascriptFixture,
     });
+
     const lintResult = required(result, "unused variable lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -145,6 +162,7 @@ describe("shared YARAPA behavior", () => {
       "export function increment(value) { var next = value + 1; return next; }\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "var lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -157,6 +175,7 @@ describe("shared YARAPA behavior", () => {
       "export const equivalent = (left, right) => left == right;\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "equality lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -174,9 +193,11 @@ describe("shared YARAPA behavior", () => {
       "};",
       "",
     ].join("\n");
+
     const [result] = await eslint.lintText(source, {
       filePath: javascriptFixture,
     });
+
     const lintResult = required(result, "literal syntax lint result");
     const ruleIds = lintResult.messages.map(message => message.ruleId);
 
@@ -192,9 +213,11 @@ describe("shared YARAPA behavior", () => {
       "export function collect() { return Array.from(arguments); }",
       "",
     ].join("\n");
+
     const [result] = await eslint.lintText(source, {
       filePath: javascriptFixture,
     });
+
     const lintResult = required(result, "modern function lint result");
     const ruleIds = lintResult.messages.map(message => message.ruleId);
 
@@ -211,9 +234,11 @@ describe("shared YARAPA behavior", () => {
       "};",
       "",
     ].join("\n");
+
     const [result] = await eslint.lintText(source, {
       filePath: javascriptFixture,
     });
+
     const lintResult = required(result, "modern builtins lint result");
     const ruleIds = lintResult.messages.map(message => message.ruleId);
 
@@ -227,6 +252,7 @@ describe("shared YARAPA behavior", () => {
       "const password = \"secret-value\";\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "SonarJS behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -239,6 +265,7 @@ describe("shared YARAPA behavior", () => {
       "import missing from \"./does-not-exist.js\";\nexport { missing };\n",
       { filePath: path.resolve(packageRoot, "fixtures/import-resolution.js") },
     );
+
     const lintResult = required(result, "import-x behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -251,6 +278,7 @@ describe("shared YARAPA behavior", () => {
       "import fs from \"fs\";\nexport { fs };\n",
       { filePath: path.resolve(packageRoot, "fixtures/unicorn-sample.js") },
     );
+
     const lintResult = required(result, "unicorn behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -267,6 +295,7 @@ describe("shared YARAPA behavior", () => {
     const [result] = await eslint.lintFiles(
       path.resolve(projectRoot, filePath),
     );
+
     const lintResult = required(result, "framework naming lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
@@ -291,6 +320,7 @@ describe("shared YARAPA behavior", () => {
       const [result] = await eslint.lintText(source, {
         filePath: path.resolve(projectRoot, filePath),
       });
+
       const lintResult = required(result, "abbreviation lint result");
 
       expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -306,9 +336,11 @@ describe("shared YARAPA behavior", () => {
         ["name", "example"],
       ]),
     )}\n`;
+
     const [result] = await eslint.lintText(source, {
       filePath: path.resolve(packageRoot, "fixtures/package.json"),
     });
+
     const lintResult = required(result, "package manifest behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -321,7 +353,9 @@ describe("shared YARAPA behavior", () => {
       "import _ from \"lodash\";\nexport { _ };\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "restricted imports behavior result");
+
     const restrictedMessage = lintResult.messages.find(
       message => message.ruleId === "no-restricted-imports",
     );
@@ -335,6 +369,7 @@ describe("shared YARAPA behavior", () => {
       "/* eslint-disable no-var */\nvar x = 1;\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "eslint-comments behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -388,6 +423,7 @@ describe("shared YARAPA behavior", () => {
       const [result] = await eslint.lintText(source, {
         filePath: javascriptFixture,
       });
+
       const lintResult = required(result, "lint result");
 
       expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -398,9 +434,11 @@ describe("shared YARAPA behavior", () => {
 
   it("reports duplicate keys in JSON files", async () => {
     const source = "{\n  \"name\": \"one\",\n  \"name\": \"two\"\n}\n";
+
     const [result] = await eslint.lintText(source, {
       filePath: path.resolve(packageRoot, "fixtures/sample.json"),
     });
+
     const lintResult = required(result, "JSON behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -412,12 +450,14 @@ describe("shared YARAPA behavior", () => {
     "reports focused test violations through yarapa vitest policy",
     async () => {
       const testSource = "describe.only(\"sample\", () => {});\n";
+
       const [result] = await eslint.lintText(testSource, {
         filePath: path.resolve(
           packageRoot,
           "test/behavior/behavior.test.ts",
         ),
       });
+
       const lintResult = required(result, "vitest behavior result");
 
       expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -431,6 +471,7 @@ describe("shared YARAPA behavior", () => {
       "// @ts-expect-error explanation of suppression\nexport const value = 1;\n",
       { filePath: path.resolve(projectRoot, "src/valid.ts") },
     );
+
     const lintResult = required(result, "ts-comment behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -443,7 +484,9 @@ describe("shared YARAPA behavior", () => {
       "export const helper = (): number => 42;\n",
       { filePath: path.resolve(projectRoot, "src/index.ts") },
     );
+
     const lintResult = required(result, "barrel index behavior result");
+
     const restrictedSyntax = lintResult.messages.find(
       message => message.ruleId === "no-restricted-syntax",
     );
@@ -456,6 +499,7 @@ describe("shared YARAPA behavior", () => {
       "export { valid } from \"./valid.js\";\n",
       { filePath: path.resolve(projectRoot, "src/index.ts") },
     );
+
     const lintResult = required(result, "barrel index valid result");
 
     expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
@@ -468,7 +512,9 @@ describe("shared YARAPA behavior", () => {
       "export const value = 1;\n",
       { filePath: path.resolve(projectRoot, "src/plain.js") },
     );
+
     const lintResult = required(result, "plain js behavior result");
+
     const restrictedSyntax = lintResult.messages.find(
       message => message.ruleId === "no-restricted-syntax",
     );
@@ -481,6 +527,7 @@ describe("shared YARAPA behavior", () => {
       "export const message = \"Hello \u{1F600}\";\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "emoji behavior result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
@@ -493,6 +540,7 @@ describe("shared YARAPA behavior", () => {
       "export const value = 1; // inline comment\n// TODO: fix later\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "comment policy behavior result");
     const ruleIds = lintResult.messages.map(message => message.ruleId);
 
@@ -515,7 +563,9 @@ describe("shared YARAPA behavior", () => {
       const [result] = await eslint.lintText(source, {
         filePath: path.resolve(packageRoot, "src/sample-feature.ts"),
       });
+
       const lintResult = required(result, "colocation implementation result");
+
       const restrictedSyntax = lintResult.messages.find(
         message => message.ruleId === "no-restricted-syntax",
       );
@@ -529,6 +579,7 @@ describe("shared YARAPA behavior", () => {
       "export type Contract = { name: string };\n",
       { filePath: path.resolve(packageRoot, "src/sample-feature.type.ts") },
     );
+
     expect(
       typeResult?.messages.map(message => message.ruleId),
     ).not.toContain("no-restricted-syntax");
@@ -537,6 +588,7 @@ describe("shared YARAPA behavior", () => {
       "export function helper(): boolean { return true; }\n",
       { filePath: path.resolve(packageRoot, "src/sample-feature.helper.ts") },
     );
+
     expect(
       helperResult?.messages.map(message => message.ruleId),
     ).not.toContain("no-restricted-syntax");
@@ -547,7 +599,9 @@ describe("shared YARAPA behavior", () => {
       "import { debounce } from \"es-toolkit/compat\";\nexport { debounce };\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "deep import behavior result");
+
     const restrictedMessage = lintResult.messages.find(
       message => message.ruleId === "no-restricted-imports",
     );
@@ -563,7 +617,9 @@ describe("shared YARAPA behavior", () => {
       "import * as esToolkit from \"es-toolkit\";\nexport { esToolkit };\n",
       { filePath: javascriptFixture },
     );
+
     const lintResult = required(result, "namespace import behavior result");
+
     const restrictedMessage = lintResult.messages.find(
       message => message.ruleId === "no-restricted-syntax",
     );
@@ -581,13 +637,78 @@ describe("shared YARAPA behavior", () => {
       "export const third = \"duplicated-magic-string-token\";",
       "",
     ].join("\n");
+
     const [result] = await eslint.lintText(source, {
       filePath: javascriptFixture,
     });
+
     const lintResult = required(result, "sonarjs duplicate string result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
       "sonarjs/no-duplicate-string",
+    );
+  });
+
+  it("reports missing blank line around multiline variable declarations", async () => {
+    const source = [
+      "const first = 1;",
+      "const second = [",
+      "  1,",
+      "  2,",
+      "];",
+      "const third = 3;",
+      "",
+    ].join("\n");
+
+    const [result] = await eslint.lintText(source, {
+      filePath: javascriptFixture,
+    });
+
+    const lintResult = required(result, "multiline padding lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@stylistic/padding-line-between-statements",
+    );
+  });
+
+  it("reports unexpected blank line between adjacent single-line variable declarations", async () => {
+    const source = [
+      "const first = 1;",
+      "",
+      "const second = 2;",
+      "",
+    ].join("\n");
+
+    const [result] = await eslint.lintText(source, {
+      filePath: javascriptFixture,
+    });
+
+    const lintResult = required(result, "singleline padding lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@stylistic/padding-line-between-statements",
+    );
+  });
+
+  it("reports missing blank line before block statements", async () => {
+    const source = [
+      "export function run(): void {",
+      "  const value = 1;",
+      "  if (value) {",
+      "    void value;",
+      "  }",
+      "}",
+      "",
+    ].join("\n");
+
+    const [result] = await eslint.lintText(source, {
+      filePath: javascriptFixture,
+    });
+
+    const lintResult = required(result, "block-like padding lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@stylistic/padding-line-between-statements",
     );
   });
 });

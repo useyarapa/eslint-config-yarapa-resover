@@ -3,7 +3,10 @@ import type { Linter } from "eslint";
 import stylisticPlugin from "@stylistic/eslint-plugin";
 
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
-import { MAX_LINE_LENGTH } from "./stylistic.constant.js";
+import {
+  MAX_LINE_LENGTH,
+  PADDING_LINE_BETWEEN_STATEMENTS,
+} from "./stylistic.constant.js";
 
 const stylisticRules: Linter.RulesRecord = {
   "@stylistic/array-bracket-spacing": ["error", "never"],
@@ -156,6 +159,10 @@ const stylisticRules: Linter.RulesRecord = {
   "@stylistic/padded-blocks": [
     "error",
     { blocks: "never", classes: "never", switches: "never" },
+  ],
+  "@stylistic/padding-line-between-statements": [
+    "error",
+    ...PADDING_LINE_BETWEEN_STATEMENTS,
   ],
   "@stylistic/quote-props": ["error", "as-needed"],
   "@stylistic/quotes": [
