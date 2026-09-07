@@ -1,120 +1,77 @@
 ---
 name: create-github-issue
 description: >
-  Create GitHub issues adhering strictly to repository issue templates in
-  .github/ISSUE_TEMPLATE/ (bug.yml, feature.yml, config.yml). Use this skill
-  whenever the user asks to open an issue, report a bug, request a feature,
-  file a defect, or run `gh issue create`. Enforces template field structures,
-  safety verification, and zero-emoji compliance.
-argument-hint: "[bug|feature]"
+  File GitHub issues matching repository templates (.github/ISSUE_TEMPLATE/).
+  Triggers on issue creation, bug reporting, feature requests, or gh issue
+  create.
+argument-hint: "[bug|feature|question]"
 license: MIT
 ---
 
 # Create GitHub Issue
 
-Guide agents and contributors through filing issues that strictly adhere to repository issue templates (`.github/ISSUE_TEMPLATE/`) and project governance rules.
+Guide agents through discovering repository issue templates and submitting well-formed, sanitized GitHub issues.
 
 ## Core Rules
 
-1. **Strict Template Adherence**:
-   - For bug reports: strictly follow `.github/ISSUE_TEMPLATE/bug.yml`.
-   - For feature requests: strictly follow `.github/ISSUE_TEMPLATE/feature.yml`.
-   - For usage questions or exploratory discussions: route to GitHub Discussions as specified in `config.yml`.
-2. **Zero Emojis**: Never use emojis in issue titles or issue descriptions. Use clean ASCII text indicators.
-3. **Safety Guarantee**: Never include credentials, API keys, tokens, customer data, or proprietary code in issues.
-4. **Conventional Issue Titles**:
-   - Bugs: `bug: <concise summary>`
-   - Features: `feat: <concise summary>`
+1. **Template as Source of Truth**: Always inspect `.github/ISSUE_TEMPLATE/` or `.github/issue_template.md` before writing. Fill every required field specified by the repository's schema.
+2. **Zero Emojis**: Never use emojis in issue titles or issue descriptions. Use clean ASCII indicators (`[x]`, `[ ]`, `PASS`, `FAIL`).
+3. **Strict Sanitization**: Never include credentials, tokens, private keys, customer data, or internal URLs. Sanitize code snippets to minimal reproducible examples.
+4. **Conventional Title**: Prefix titles with conventional types:
+   - Bugs/Defects: `bug: <concise summary>`
+   - Features/Enhancements: `feat: <concise summary>`
+   - Questions/Discussions: Route to GitHub Discussions when configured.
 
----
+## Step-by-Step Workflow
 
-## Issue Types and Templates
+### Step 1: Discover Repository Template
 
-### Type 1: Bug Report (`bug.yml`)
-
-Use this type when reporting incorrect diagnostics, runtime crashes, compatibility failures, or package consumption defects.
-
-**Required Fields**:
-
-- **Version**: `@yarapa/eslint-config` version (e.g. `0.1.0`).
-- **Environment**: Node.js version, ESLint version, TypeScript version, OS, package manager, and profile used (`next`, `react`, `nest`, or default).
-- **Minimal reproduction**: Public reproduction repo or minimal sanitized config snippet.
-- **Expected behavior**: What should have happened.
-- **Actual behavior**: What actually happened (diagnostic output, error message).
-- **Safety**: Confirm removal of credentials, secrets, and proprietary code.
-
-**Invocation via GitHub CLI**:
+Inspect available issue templates in the target repository:
 
 ```sh
-gh issue create --title "bug: <concise summary>" --body "$(cat <<'EOF'
-### @yarapa/eslint-config version
+ls -la .github/ISSUE_TEMPLATE/ 2>/dev/null || ls -la .github/*issue*.md 2>/dev/null
+```
 
-0.1.0
+- **YAML Forms (`*.yml`, `*.yaml`)**: Read the file to extract field ids, required flags, and markdown headers.
+- **Markdown Templates (`*.md`)**: Read the file and mirror its exact markdown headings and prompts.
+- **No Template**: Fall back to the standard structure:
+  - Bugs: Environment, Steps to Reproduce, Expected Behavior, Actual Behavior.
+  - Features: Problem Statement, Proposed Solution, Alternatives Considered.
 
-### Environment
+### Step 2: Extract Runtime and Environment Data Dynamically
 
-- Node.js: 24.20.0
-- ESLint: 10.9.1
-- TypeScript: 6.0.3
-- OS: macOS
-- Package Manager: pnpm 11.23.0
-- Profile: default
+Query the local environment directly rather than guessing or hardcoding versions:
 
-### Minimal reproduction
+```sh
+# Extract target package or runtime version from manifest or toolchain
+node -v 2>/dev/null || python3 --version 2>/dev/null || go version 2>/dev/null
+```
 
-<Reproduction steps or sanitized config/code>
+Inspect `package.json`, lockfiles, or relevant config to identify exact package names, versions, and dependencies in use.
 
-### Expected behavior
+### Step 3: Handle Discussions Routing
 
-<Description of expected behavior>
+If the user request is an open-ended question, general inquiry, or unvetted idea:
 
-### Actual behavior
+1. Check `.github/ISSUE_TEMPLATE/config.yml` or repo discussion status:
+   ```sh
+   gh repo view --json url,hasDiscussionsEnabled
+   ```
+2. If discussions are enabled, guide the user to GitHub Discussions instead of filing an issue.
 
-<Description of actual behavior or error diagnostic>
+### Step 4: Construct Body and Submit via GitHub CLI
 
-### Safety
+Render the issue body strictly adhering to the discovered template's fields using a HEREDOC:
 
-- [x] I removed credentials, secrets, personal/customer data, and proprietary source code from this report.
+```sh
+gh issue create --title "<type>: <concise summary>" --body "$(cat <<'EOF'
+<rendered issue body matching discovered template>
 EOF
 )"
 ```
 
----
+### Completion Criteria
 
-### Type 2: Feature Request (`feature.yml`)
-
-Use this type when proposing a concrete, actionable change or enhancement to `@yarapa/eslint-config`.
-
-**Required Fields**:
-
-- **Problem**: Concrete limitation, friction, or use case that needs addressing.
-- **Proposed change**: The smallest, most focused change that resolves the problem.
-- **Alternatives considered**: Optional workarounds or alternative conventions considered.
-
-**Invocation via GitHub CLI**:
-
-```sh
-gh issue create --title "feat: <concise summary>" --body "$(cat <<'EOF'
-### Problem
-
-<Describe the concrete limitation or use case>
-
-### Proposed change
-
-<Describe the smallest focused change addressing the problem>
-
-### Alternatives considered
-
-<Optional alternatives, workarounds, or upstream conventions>
-EOF
-)"
-```
-
----
-
-### Type 3: Questions & Exploratory Ideas (`config.yml`)
-
-If the user ask is an open-ended question, usage inquiry, or unvetted idea, advise routing to GitHub Discussions instead of opening an issue:
-
-- **Questions & Usage Help**: https://github.com/useyarapa/eslint-config-yarapa/discussions/categories/q-a
-- **Ideas & Design Discussion**: https://github.com/useyarapa/eslint-config-yarapa/discussions/categories/ideas
+1. Issue created via `gh issue create`.
+2. Returned issue URL surfaced to the user.
+3. Zero secrets, zero emojis, and complete template field coverage confirmed.

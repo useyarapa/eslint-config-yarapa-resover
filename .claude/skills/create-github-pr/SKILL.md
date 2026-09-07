@@ -1,144 +1,83 @@
 ---
 name: create-github-pr
 description: >
-  Generate and open pull requests strictly adhering to the repository PR
-  template (.github/pull_request_template.md). Use this skill whenever the user
-  asks to create a pull request, open a PR, prepare a PR, submit changes, or
-  run `gh pr create`. Enforces verification checklist execution, changeset
-  requirements, conventional PR naming, and zero-emoji compliance.
-argument-hint: "[issue-number|optional-title]"
+  Open pull requests conforming to repository PR templates
+  (.github/pull_request_template.md). Triggers on PR creation, submission, or gh
+  pr create.
+argument-hint: "[issue-number|title]"
 license: MIT
 ---
 
 # Create GitHub Pull Request
 
-Guide agents and contributors through creating pull requests that strictly conform to `.github/pull_request_template.md` and repository engineering standards.
+Guide agents through discovering repository pull request templates, running verification checklists, and submitting PRs via GitHub CLI.
 
 ## Core Rules
 
-1. **Strict Template Adherence**: The pull request body must strictly contain all sections from `.github/pull_request_template.md` without omission.
-2. **Zero Emojis**: Never include emojis in PR title or PR body. Use clean ASCII text indicators (`[x]`, `[ ]`, `PASS`, `FAIL`).
-3. **Evidence-Based Verification**: Do not check verification checkboxes blindly. Run each required command, confirm the result, and mark passed items with `[x]`.
-4. **Changeset Compliance**: Identify whether changes affect `packages/eslint-config`. If yes, require a Changeset; if no package impact, require an empty Changeset (`pnpm changeset --empty`).
-
----
+1. **Template as Source of Truth**: Read and populate the repository's `.github/pull_request_template.md` (or `.github/PULL_REQUEST_TEMPLATE.md`). Never omit required sections.
+2. **Evidence-Based Checklists**: Never check a box (`[x]`) blindly. Execute each verification command specified in the template, confirm the result, and mark passed items.
+3. **Zero Emojis**: Never use emojis in PR titles or bodies. Use clean ASCII indicators (`[x]`, `[ ]`, `PASS`, `FAIL`).
+4. **Conventional Title**: Follow conventional commits: `<type>(<scope>): <concise description>`.
+5. **No Secrets**: Confirm removal of credentials, tokens, and sensitive data from all committed files and diffs.
 
 ## Step-by-Step Workflow
 
 ### Step 1: Pre-flight Git State Inspection
 
-Inspect branch status and diff:
+Verify the working tree, branch divergence, and commit history:
 
 ```sh
 git status
-git diff main...HEAD
-git log main...HEAD --oneline
+git diff origin/main...HEAD
+git log origin/main...HEAD --oneline
 ```
 
-Verify that all commits follow the repository's commit-message policy.
+Confirm that branch is pushed to remote and up to date.
 
-### Step 2: Execute Verification Checklist
+### Step 2: Read Repository PR Template
 
-Run each verification check specified in the repository PR template:
+Inspect the repository for PR templates:
 
 ```sh
-# 1. Package lint
-pnpm --filter @yarapa/eslint-config lint
-
-# 2. Package type check
-pnpm --filter @yarapa/eslint-config check-types
-
-# 3. Package tests
-pnpm --filter @yarapa/eslint-config test
-
-# 4. Dead code & dependency audit
-pnpm knip
-
-# 5. Full consumer verification pipeline
-pnpm --filter @yarapa/eslint-config verify
+cat .github/pull_request_template.md 2>/dev/null || cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null
 ```
 
-If any check fails, resolve the root cause before proceeding. Never open a PR with failing checks.
+If no template exists, use the standard baseline:
 
-### Step 3: Check Changeset Status
+- Summary of changes and motivation.
+- Issue reference (`Fixes #<number>` or `None`).
+- Verification checklist of executed commands.
 
-Verify whether a changeset file exists under `.changeset/*.md`:
+### Step 3: Execute Verification Checklist
+
+Parse the verification commands found in the template's checklist or test scripts from the repository manifest (`package.json`, `Makefile`, `Cargo.toml`):
+
+- Run each check sequentially.
+- If any check fails, resolve the root cause before continuing. Never submit a PR with failing checks.
+- Check off passing commands with `[x]` in the final body.
+
+### Step 4: Handle Release Metadata
+
+Inspect repository release tooling if present:
+
+- **Changeset Repositories (`.changeset/` exists)**:
+  Check changeset status (`pnpm changeset status 2>/dev/null || npx changeset status 2>/dev/null`). If user-facing package changes occurred, confirm a changeset is committed; otherwise ensure an empty changeset (`--empty`) is included if required by the template.
+- **Conventional / Semantic Release**:
+  Confirm commit titles follow `<type>(<scope>): <summary>` for automated changelog generation.
+
+### Step 5: Submit Pull Request via GitHub CLI
+
+Format the PR body by filling out the discovered template and invoke `gh pr create` using a HEREDOC:
 
 ```sh
-pnpm changeset:status
-```
-
-- If changes affect `packages/eslint-config/`, ensure a valid changeset is committed.
-- If changes have no package release impact (e.g. repo tooling, docs, CI), run:
-  ```sh
-  pnpm changeset --empty
-  ```
-
-### Step 4: Construct PR Body
-
-Format the pull request body using HEREDOC matching `.github/pull_request_template.md` exactly:
-
-```markdown
-## Description
-
-<Concise, clear explanation of proposed changes and motivation.>
-
-## Related issue
-
-<!-- Reference related issue (e.g. Fixes #123) or 'None' -->
-
-Fixes #<issue-number>
-
-## Reviewers
-
-@<reviewer-username>
-
-## Verification
-
-- [x] `pnpm --filter @yarapa/eslint-config lint`
-- [x] `pnpm --filter @yarapa/eslint-config check-types`
-- [x] `pnpm --filter @yarapa/eslint-config test`
-- [x] `pnpm knip`
-- [x] `pnpm --filter @yarapa/eslint-config verify`
-
-## Release
-
-<!-- Mark exactly one of the two options below -->
-
-- [x] This package change includes a Changeset.
-- [ ] This change has no package release impact and uses an empty Changeset.
-```
-
-### Step 5: Create Pull Request via GitHub CLI
-
-Execute `gh pr create` with properly formatted title and body:
-
-```sh
-gh pr create --title "<type>(<scope>): <short description>" --body "$(cat <<'EOF'
-## Description
-
-<description text>
-
-## Related issue
-
-Fixes #123
-
-## Reviewers
-
-@maintainer
-
-## Verification
-
-- [x] `pnpm --filter @yarapa/eslint-config lint`
-- [x] `pnpm --filter @yarapa/eslint-config check-types`
-- [x] `pnpm --filter @yarapa/eslint-config test`
-- [x] `pnpm knip`
-- [x] `pnpm --filter @yarapa/eslint-config verify`
-
-## Release
-
-- [x] This package change includes a Changeset.
-- [ ] This change has no package release impact and uses an empty Changeset.
+gh pr create --title "<type>(<scope>): <concise description>" --body "$(cat <<'EOF'
+<populated PR body matching repository template with checked [x] items>
 EOF
 )"
 ```
+
+### Completion Criteria
+
+1. All verification checks executed and confirmed passing.
+2. Pull request created via `gh pr create`.
+3. Generated PR URL returned to the user.
