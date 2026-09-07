@@ -218,7 +218,6 @@ export function verifyTarball(): void {
 
 const scriptPath = process.argv[1];
 const currentPath = fileURLToPath(import.meta.url);
-
 const isDirectExecution = Boolean(
   scriptPath && path.resolve(scriptPath) === currentPath,
 );

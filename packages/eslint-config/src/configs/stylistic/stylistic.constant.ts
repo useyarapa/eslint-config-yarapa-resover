@@ -5,7 +5,6 @@ export const PADDING_LINE_BETWEEN_STATEMENTS = [
   { blankLine: "any", next: "directive", prev: "directive" },
   { blankLine: "always", next: "*", prev: "import" },
   { blankLine: "any", next: "import", prev: "import" },
-  { blankLine: "always", next: "*", prev: ["const", "let", "var"] },
   {
     blankLine: "never",
     next: ["singleline-const", "singleline-let", "singleline-var"],
