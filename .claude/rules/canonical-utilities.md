@@ -26,10 +26,10 @@ Apply this priority order for utility operations:
 
 ## Restricted Libraries
 
-General-purpose utility alternatives (`lodash`, `lodash-es`, `underscore`, `ramda`) are prohibited. All attempts to import them must fail at the `no-restricted-imports` linting gate.
+General-purpose utility alternatives (`lodash`, `lodash-es`, `underscore`, `ramda`) are prohibited and must fail at the configured `no-restricted-imports` linting gate.
 
 ## Verification
 
 - Confirm all generic utilities originate from either native ECMAScript or `es-toolkit`.
 - Confirm no custom helpers duplicate operations provided by `es-toolkit`.
-- Run `pnpm lint:check` to verify that `no-restricted-imports` passes.
+- Run the repository's configured linter to verify that `no-restricted-imports` passes.

@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*.config.*"
+  - "**/.*rc*"
+  - "**/package.json"
+  - "**/tsconfig*.json"
+---
+
 # No Speculative Configuration Rules
 
 Keep configuration demand-driven, observable, and aligned with verified repository and consumer requirements.
@@ -15,8 +23,8 @@ Keep configuration demand-driven, observable, and aligned with verified reposito
 - Use consumer-facing patterns only when they are part of a documented contract and covered by tests.
 - Keep generated artifacts and external tool boundaries explicit rather than hiding them in broad patterns.
 
-## Observable Verification
+## Verification
 
-- Back every new configuration rule or override with a test case or demonstrable behavior.
-- Verify the configuration against the real tool version used by the repository.
-- Prefer a failing test or diagnostic over an assumption that a configuration is necessary.
+- Confirm that each configuration option or rule override has a matching test case or diagnostic verification.
+- Run the repository's configured linter and type check to verify the configuration resolves cleanly.
+- Run the configured unused dependency and export analyzer to confirm no unneeded packages or options were introduced.

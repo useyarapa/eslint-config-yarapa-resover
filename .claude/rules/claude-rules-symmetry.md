@@ -1,3 +1,8 @@
+---
+paths:
+  - ".claude/rules/**/*.md"
+---
+
 # Claude Rules Symmetry Rules
 
 Maintain strict naming consistency, structural symmetry, and clear loading boundaries across all rule files in `.claude/rules/`.
@@ -35,4 +40,4 @@ Every rule file must follow the exact same Markdown skeleton in this order:
 
 - Confirm new rule filenames follow kebab-case and the established naming prefix.
 - Verify the file contains all required skeleton sections including `## Verification`.
-- Confirm Markdown formatting adheres to repository linting standards via `pnpm lint:check`.
+- Confirm Markdown formatting adheres to the repository's configured linter and documentation format standards.
