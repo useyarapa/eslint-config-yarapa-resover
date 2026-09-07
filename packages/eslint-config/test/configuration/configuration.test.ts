@@ -122,6 +122,7 @@ describe("canonical public configuration", () => {
     expect(config.languageOptions?.parser).toBe(jsoncParser);
     expect(config.plugins?.["package-json"]).toBe(packageJsonPlugin);
     expect(Object.keys(config.rules ?? {})).toHaveLength(62);
+
     expect(new Set(Object.values(config.rules ?? {}))).toEqual(
       new Set(["error"]),
     );
@@ -177,6 +178,7 @@ describe("canonical public configuration", () => {
 
     expect(config).toBeDefined();
     expect(config?.rules?.["import-x/no-duplicates"]).toBe("error");
+
     expect(config?.settings?.["import-x/resolver"]).toEqual({
       typescript: true,
     });
@@ -230,6 +232,7 @@ describe("canonical public configuration", () => {
         },
       },
     ]);
+
     expect(reactConfig).toMatchObject({
       files: REACT_FILES,
       rules: {
@@ -293,6 +296,7 @@ describe("canonical public configuration", () => {
     expect(findRule(yarapa, "@typescript-eslint/no-unused-vars")).toBe("off");
     expect(findRule(yarapa, "no-unused-vars")).toBe("off");
     expect(findRule(yarapa, "unused-imports/no-unused-imports")).toBe("error");
+
     expect(findRule(yarapa, "unused-imports/no-unused-vars")).toEqual([
       "error",
       {
@@ -367,6 +371,7 @@ describe("canonical public configuration", () => {
 
     expect(baseModernConfig.rules?.["no-inline-comments"]).toBe("error");
     expect(baseModernConfig.rules?.["no-warning-comments"]).toBeDefined();
+
     expect(baseModernConfig.rules?.["max-lines"]).toEqual([
       "error",
       { max: 300, skipBlankLines: true, skipComments: true },

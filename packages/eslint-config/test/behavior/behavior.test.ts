@@ -375,9 +375,11 @@ describe("shared YARAPA behavior", () => {
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
       "@eslint-community/eslint-comments/require-description",
     );
+
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
       "@eslint-community/eslint-comments/no-use",
     );
+
     expect(
       lintResult.messages.some(message =>
         message.message.includes("'noInlineConfig' setting"),
@@ -607,6 +609,7 @@ describe("shared YARAPA behavior", () => {
     );
 
     expect(restrictedMessage).toBeDefined();
+
     expect(restrictedMessage?.message).toContain(
       "Deep imports from es-toolkit are prohibited",
     );
@@ -625,6 +628,7 @@ describe("shared YARAPA behavior", () => {
     );
 
     expect(restrictedMessage).toBeDefined();
+
     expect(restrictedMessage?.message).toContain(
       "Namespace imports from 'es-toolkit' are prohibited",
     );
@@ -708,6 +712,135 @@ describe("shared YARAPA behavior", () => {
     const lintResult = required(result, "block-like padding lint result");
 
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@stylistic/padding-line-between-statements",
+    );
+  });
+
+  const typescriptUnusedAssertion
+    = "expect(findRule(yarapa, \"@typescript-eslint/no-unused-vars\")).toBe(\"off\");";
+
+  const javascriptUnusedAssertion
+    = "expect(findRule(yarapa, \"no-unused-vars\")).toBe(\"off\");";
+
+  const pluginImportsAssertion
+    = "expect(findRule(yarapa, \"unused-imports/no-unused-imports\")).toBe(\"error\");";
+
+  const pluginVariablesAssertion = [
+    "expect(findRule(yarapa, \"unused-imports/no-unused-vars\")).toEqual([",
+    "  \"error\",",
+    "  {",
+    "    args: \"after-used\",",
+    "    argsIgnorePattern: \"^_\",",
+    "    vars: \"all\",",
+    "    varsIgnorePattern: \"^_\",",
+    "  },",
+    "]);",
+  ].join("\n");
+
+  it.each([
+    {
+      badSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        pluginImportsAssertion,
+        pluginVariablesAssertion,
+        "",
+      ].join("\n"),
+      goodSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        pluginImportsAssertion,
+        "",
+        pluginVariablesAssertion,
+        "",
+      ].join("\n"),
+      name: "requires padding before a multiline expression",
+    },
+    {
+      badSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        pluginVariablesAssertion,
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      goodSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        "",
+        pluginVariablesAssertion,
+        "",
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      name: "requires padding around a multiline expression",
+    },
+    {
+      badSource: [
+        typescriptUnusedAssertion,
+        "",
+        javascriptUnusedAssertion,
+        "",
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      goodSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      name: "groups adjacent single-line expressions",
+    },
+    {
+      badSource: [
+        typescriptUnusedAssertion,
+        "",
+        javascriptUnusedAssertion,
+        "",
+        pluginVariablesAssertion,
+        "",
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      goodSource: [
+        typescriptUnusedAssertion,
+        javascriptUnusedAssertion,
+        "",
+        pluginVariablesAssertion,
+        "",
+        pluginImportsAssertion,
+        "",
+      ].join("\n"),
+      name: "groups single-line expressions before multiline expressions",
+    },
+  ])("$name", async ({ badSource, goodSource }) => {
+    const [badResult] = await eslint.lintText(badSource, {
+      filePath: javascriptFixture,
+    });
+
+    const [goodResult] = await eslint.lintText(goodSource, {
+      filePath: javascriptFixture,
+    });
+
+    const badLintResult = required(
+      badResult,
+      "invalid expression padding result",
+    );
+
+    const goodLintResult = required(
+      goodResult,
+      "valid expression padding result",
+    );
+
+    const badRuleIds = badLintResult.messages.map(message => message.ruleId);
+    const goodRuleIds = goodLintResult.messages.map(message => message.ruleId);
+
+    expect(badRuleIds).toContain(
+      "@stylistic/padding-line-between-statements",
+    );
+
+    expect(goodRuleIds).not.toContain(
       "@stylistic/padding-line-between-statements",
     );
   });

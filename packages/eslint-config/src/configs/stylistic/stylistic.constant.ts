@@ -21,6 +21,13 @@ export const PADDING_LINE_BETWEEN_STATEMENTS = [
     next: "*",
     prev: ["multiline-const", "multiline-let", "multiline-var"],
   },
+  {
+    blankLine: "never",
+    next: "singleline-expression",
+    prev: "singleline-expression",
+  },
+  { blankLine: "always", next: "multiline-expression", prev: "*" },
+  { blankLine: "always", next: "*", prev: "multiline-expression" },
   { blankLine: "always", next: "block-like", prev: "*" },
   { blankLine: "always", next: "*", prev: "block-like" },
   { blankLine: "always", next: ["return", "throw"], prev: "*" },
