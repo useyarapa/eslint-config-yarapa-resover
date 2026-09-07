@@ -5,7 +5,10 @@ import globals from "globals";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
-import { TYPESCRIPT_TEST_FILES } from "../../src/configs/constants/index.js";
+import {
+  REACT_FILES,
+  TYPESCRIPT_TEST_FILES,
+} from "../../src/configs/constants/index.js";
 import { packageJson, vitest } from "../../src/configs/index.js";
 import yarapa from "../../src/index.js";
 import { required } from "../helpers/index.js";
@@ -190,6 +193,48 @@ describe("canonical public configuration", () => {
       config => config.name === "yarapa/unicorn",
     );
     expect(unicornConfig?.languageOptions?.globals).toEqual(globals.builtin);
+  });
+
+  it("preserves framework names without disabling abbreviation policy", () => {
+    const unicornConfig = required(
+      yarapa.find(config => config.name === "yarapa/unicorn"),
+      "unicorn config",
+    );
+    const reactConfig = required(
+      yarapa.find(config => config.name === "yarapa/unicorn/react"),
+      "unicorn React config",
+    );
+
+    expect(unicornConfig.rules?.["unicorn/prevent-abbreviations"]).toEqual([
+      "error",
+      {
+        allowList: {
+          generateStaticParams: true,
+          Props: true,
+          req: true,
+          res: true,
+        },
+      },
+    ]);
+    expect(reactConfig).toMatchObject({
+      files: REACT_FILES,
+      rules: {
+        "unicorn/prevent-abbreviations": [
+          "error",
+          {
+            replacements: {
+              param: false,
+              params: false,
+              prev: false,
+              prop: false,
+              props: false,
+              ref: false,
+              refs: false,
+            },
+          },
+        ],
+      },
+    });
   });
 
   it("shares canonical handwriting across configuration", () => {

@@ -3,7 +3,14 @@ import type { Linter } from "eslint";
 import unicornPlugin from "eslint-plugin-unicorn";
 import globals from "globals";
 
-import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+import {
+  JAVASCRIPT_AND_TYPESCRIPT_FILES,
+  REACT_FILES,
+} from "../constants/index.js";
+import {
+  FRAMEWORK_NAME_ALLOW_LIST,
+  REACT_NAME_REPLACEMENTS,
+} from "./unicorn.constant.js";
 
 const unicornRules: Linter.RulesRecord = {
   "no-negated-condition": "off",
@@ -167,7 +174,10 @@ const unicornRules: Linter.RulesRecord = {
   "unicorn/prefer-ternary": "error",
   "unicorn/prefer-top-level-await": "error",
   "unicorn/prefer-type-error": "error",
-  "unicorn/prevent-abbreviations": "off",
+  "unicorn/prevent-abbreviations": [
+    "error",
+    { allowList: FRAMEWORK_NAME_ALLOW_LIST },
+  ],
   "unicorn/relative-url-style": "error",
   "unicorn/require-array-join-separator": "error",
   "unicorn/require-css-escape": "error",
@@ -198,5 +208,18 @@ export const unicorn: Linter.Config[] = [
       unicorn: unicornPlugin,
     },
     rules: unicornRules,
+  },
+  {
+    files: REACT_FILES,
+    name: "yarapa/unicorn/react",
+    rules: {
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          allowList: FRAMEWORK_NAME_ALLOW_LIST,
+          replacements: REACT_NAME_REPLACEMENTS,
+        },
+      ],
+    },
   },
 ];

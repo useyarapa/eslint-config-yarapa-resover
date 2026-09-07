@@ -3,7 +3,11 @@ import { describe, expect, it } from "vitest";
 
 import yarapa from "../../src/index.js";
 import { eslintForConfigs, packageRoot } from "../helpers/index.js";
-import { SAMPLE_FILES } from "./config-validation.helper.js";
+import {
+  NON_REACT_TYPED_SAMPLE_FILES,
+  REACT_SAMPLE_FILES,
+  SAMPLE_FILES,
+} from "./config-validation.helper.js";
 
 describe("Flat Config validation", () => {
   it.each(SAMPLE_FILES)("resolves configuration for %s", async sampleFile => {
@@ -13,6 +17,63 @@ describe("Flat Config validation", () => {
       ),
     ).resolves.toBeDefined();
   });
+
+  it.each(NON_REACT_TYPED_SAMPLE_FILES)(
+    "resolves baseline abbreviation rules for %s",
+    async sampleFile => {
+      await expect(
+        eslintForConfigs(yarapa).calculateConfigForFile(
+          path.resolve(packageRoot, sampleFile),
+        ),
+      ).resolves.toHaveProperty(
+        ["rules", "unicorn/prevent-abbreviations"],
+        [
+          2,
+          {
+            allowList: {
+              generateStaticParams: true,
+              Props: true,
+              req: true,
+              res: true,
+            },
+          },
+        ],
+      );
+    },
+  );
+
+  it.each(REACT_SAMPLE_FILES)(
+    "resolves React abbreviation overrides for %s",
+    async sampleFile => {
+      await expect(
+        eslintForConfigs(yarapa).calculateConfigForFile(
+          path.resolve(packageRoot, sampleFile),
+        ),
+      ).resolves.toHaveProperty(
+        ["rules", "unicorn/prevent-abbreviations"],
+        [
+          2,
+          {
+            allowList: {
+              generateStaticParams: true,
+              Props: true,
+              req: true,
+              res: true,
+            },
+            replacements: {
+              param: false,
+              params: false,
+              prev: false,
+              prop: false,
+              props: false,
+              ref: false,
+              refs: false,
+            },
+          },
+        ],
+      );
+    },
+  );
 
   it("isolates source and JSON rule scopes", async () => {
     const eslint = eslintForConfigs(yarapa);

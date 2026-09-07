@@ -12,6 +12,7 @@ export const JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS = [
 export const JAVASCRIPT_FILES = JAVASCRIPT_EXTENSIONS.map(
   extension => `**/*${extension}`,
 );
+export const REACT_FILES = ["**/*.jsx", "**/*.tsx"];
 export const JSON5_FILES = JSON_EXTENSIONS.filter(
   extension => extension === JSON5_EXTENSION,
 ).map(extension => `**/*${extension}`);

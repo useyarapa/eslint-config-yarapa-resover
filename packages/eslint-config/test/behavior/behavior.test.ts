@@ -258,6 +258,47 @@ describe("shared YARAPA behavior", () => {
     );
   });
 
+  it.each([
+    "src/app/api/[id]/route.ts",
+    "src/app/blog/[slug]/page.tsx",
+    "src/cats.controller.ts",
+    "src/component.tsx",
+  ])("accepts framework names in %s", async filePath => {
+    const [result] = await eslint.lintFiles(
+      path.resolve(projectRoot, filePath),
+    );
+    const lintResult = required(result, "framework naming lint result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
+      "unicorn/prevent-abbreviations",
+    );
+  });
+
+  it.each([
+    {
+      filePath: "src/valid.ts",
+      source:
+        "export function normalize(arg: unknown): unknown { return arg; }\n",
+    },
+    {
+      filePath: "src/component.tsx",
+      source:
+        "export function Component(opts: unknown): unknown { return opts; }\n",
+    },
+  ])(
+    "reports unrelated abbreviations in $filePath",
+    async ({ filePath, source }) => {
+      const [result] = await eslint.lintText(source, {
+        filePath: path.resolve(projectRoot, filePath),
+      });
+      const lintResult = required(result, "abbreviation lint result");
+
+      expect(lintResult.messages.map(message => message.ruleId)).toContain(
+        "unicorn/prevent-abbreviations",
+      );
+    },
+  );
+
   it("reports package manifest property order", async () => {
     const source = `${JSON.stringify(
       Object.fromEntries([
