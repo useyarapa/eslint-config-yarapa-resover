@@ -199,7 +199,6 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/no-unsafe-unzip": "off",
   "sonarjs/no-unthrown-error": "error",
   "sonarjs/no-unused-collection": "error",
-  "sonarjs/no-unused-function-argument": "off",
   "sonarjs/no-use-of-empty-return-value": "error",
   "sonarjs/no-useless-increment": "error",
   "sonarjs/no-useless-intersection": "error",

@@ -33,7 +33,6 @@ const typeCheckedPolicyRules: Linter.RulesRecord = {
   "@typescript-eslint/no-unsafe-member-access": "error",
   "@typescript-eslint/no-unsafe-return": "error",
   "@typescript-eslint/no-unsafe-unary-minus": "error",
-  "@typescript-eslint/no-unused-vars": "error",
   "@typescript-eslint/only-throw-error": "error",
   "@typescript-eslint/prefer-promise-reject-errors": "error",
   "@typescript-eslint/require-await": "error",

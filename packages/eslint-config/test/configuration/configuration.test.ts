@@ -219,4 +219,19 @@ describe("canonical public configuration", () => {
     expect(findRule(yarapa, "sonarjs/arrow-function-convention")).toBe("off");
     expect(findRule(yarapa, "sonarjs/prefer-default-last")).toBe("off");
   });
+
+  it("keeps unused code concerns on unused-imports canonical owner", () => {
+    expect(findRule(yarapa, "@typescript-eslint/no-unused-vars")).toBe("off");
+    expect(findRule(yarapa, "no-unused-vars")).toBe("off");
+    expect(findRule(yarapa, "unused-imports/no-unused-imports")).toBe("error");
+    expect(findRule(yarapa, "unused-imports/no-unused-vars")).toEqual([
+      "error",
+      {
+        args: "after-used",
+        argsIgnorePattern: "^_",
+        vars: "all",
+        varsIgnorePattern: "^_",
+      },
+    ]);
+  });
 });
