@@ -36,6 +36,7 @@ function run(
   if (result.error) {
     throw result.error;
   }
+
   if (result.status !== expectedStatus) {
     throw new Error(
       `${command} ${arguments_.join(" ")} exited with ${result.status}; expected ${expectedStatus}`,
@@ -52,6 +53,7 @@ export function verifyTarball(): void {
   const temporaryRoot = mkdtempSync(path.join(tmpdir(), "yarapa-consumer-"));
   const packageDirectory = path.resolve(temporaryRoot, "pack");
   const consumerDirectory = path.resolve(temporaryRoot, "consumer");
+
   mkdirSync(packageDirectory, { recursive: true });
   mkdirSync(consumerDirectory, { recursive: true });
   const windowsPnpm = path.resolve(process.env.PNPM_HOME ?? "", "pnpm.exe");
@@ -68,9 +70,11 @@ export function verifyTarball(): void {
     const tarballName = readdirSync(packageDirectory).find(name =>
       name.endsWith(".tgz"),
     );
+
     if (!tarballName) {
       throw new Error("pnpm pack did not produce a tarball");
     }
+
     const tarball = path.resolve(packageDirectory, tarballName);
 
     run(pnpm, ["exec", "attw", tarball, "--profile", "esm-only"], packageRoot);
@@ -198,10 +202,12 @@ export function verifyTarball(): void {
       path.resolve(consumerDirectory, "sample.js"),
       "export const answer = 42;\n",
     );
+
     writeFileSync(
       path.resolve(consumerDirectory, "sample.ts"),
       "export const answer: number = 42;\n",
     );
+
     run(node, ["verify.mjs"], consumerDirectory);
     run(node, ["verify-behavior.mjs"], consumerDirectory);
     run(pnpm, ["exec", "eslint", "sample.js", "sample.ts"], consumerDirectory);
@@ -212,6 +218,7 @@ export function verifyTarball(): void {
 
 const scriptPath = process.argv[1];
 const currentPath = fileURLToPath(import.meta.url);
+
 const isDirectExecution = Boolean(
   scriptPath && path.resolve(scriptPath) === currentPath,
 );
