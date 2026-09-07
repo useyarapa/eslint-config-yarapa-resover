@@ -16,8 +16,8 @@ Architectural and workflow constraints when working in this repository.
 
 ## Verification Requirements
 
-- Preset changes: add or update tests for both config composition / profile shape and at least one observable lint behavior in `packages/eslint-config/test/`.
-- Export or package metadata changes: run `pnpm --filter @yarapa/eslint-config test:consumer` (or `verify`), which tests the packed tarball against a real consumer project.
+- Preset contract changes require config composition / profile shape coverage and at least one observable lint behavior to distinguish the change. Extend existing coverage where possible; add nothing when current cases already detect the defect.
+- Export or package metadata changes require packed-tarball consumer verification through an explicitly requested command, Git hook, or CI.
 
 ## Testing Architecture & Fixture Policy
 
@@ -25,3 +25,4 @@ Architectural and workflow constraints when working in this repository.
 - Type-aware testing requires concrete disk fixtures with `tsconfig.json` to configure TypeScript compiler services deterministically.
 - Do not replace static declarative fixtures with bespoke dynamic setup, temporary filesystem generation, or bespoke mock harnesses.
 - Follow official ESLint test patterns and maintained capabilities.
+- Before adding, splitting, or modifying tests, apply `.claude/rules/deterministic-testing.md` as the canonical policy for admission, coverage ownership, pruning, fixtures, and execution scope.

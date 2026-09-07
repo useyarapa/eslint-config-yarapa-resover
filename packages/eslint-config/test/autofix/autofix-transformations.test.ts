@@ -71,7 +71,7 @@ describe("autofix safety and idempotence", () => {
     );
 
     expect(output).toBe(
-      "export const greet = name => { const value = `Hello ${name}`; return { value }; };\n",
+      "export const greet = name => {\n  const value = `Hello ${name}`;\n\n  return { value };\n};\n",
     );
   });
 

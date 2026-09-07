@@ -27,8 +27,8 @@ export default defineConfig(
   {
     files: [
       "packages/eslint-config/scripts/verify-tarball/**/*.{ts,mts}",
-      "packages/eslint-config/test/behavior.test.ts",
-      "packages/eslint-config/test/public-api.test.ts",
+      "packages/eslint-config/test/behavior/behavior-*.test.ts",
+      "packages/eslint-config/test/public-api/public-api-contract.test.ts",
     ],
     name: "yarapa/repository/verified-file-io",
     rules: {

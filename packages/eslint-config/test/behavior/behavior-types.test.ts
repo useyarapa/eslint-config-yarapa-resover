@@ -74,7 +74,7 @@ describe("type-aware and test restriction behavior", () => {
     const [result] = await eslint.lintText(source, {
       filePath: path.resolve(
         packageRoot,
-        "test/public-api/public-api.test.ts",
+        "test/public-api/public-api-contract.test.ts",
       ),
     });
 
@@ -111,7 +111,7 @@ describe("type-aware and test restriction behavior", () => {
       {
         filePath: path.resolve(
           packageRoot,
-          "test/behavior/behavior.test.ts",
+          "test/behavior/behavior-test-policy.test.ts",
         ),
       },
     );

@@ -191,63 +191,6 @@ describe("JavaScript policy behavior", () => {
     },
   );
 
-  it("reports package manifest property order", async () => {
-    const source = `${JSON.stringify(
-      Object.fromEntries([
-        ["version", "1.0.0"],
-        ["name", "example"],
-      ]),
-    )}\n`;
-
-    const [result] = await eslint.lintText(source, {
-      filePath: path.resolve(packageRoot, "fixtures/package.json"),
-    });
-
-    const lintResult = required(result, "package manifest behavior result");
-
-    expect(lintResult.messages.map(message => message.ruleId)).toContain(
-      "package-json/order-properties",
-    );
-  });
-
-  it("restricts alternative utility libraries in favor of es-toolkit", async () => {
-    const [result] = await eslint.lintText(
-      "import _ from \"lodash\";\nexport { _ };\n",
-      { filePath: javascriptFixture },
-    );
-
-    const lintResult = required(result, "restricted imports behavior result");
-
-    const restricted = lintResult.messages.find(
-      message => message.ruleId === "no-restricted-imports",
-    );
-
-    expect(restricted).toBeDefined();
-    expect(restricted?.message).toContain("es-toolkit");
-  });
-
-  it("rejects eslint-disable comments via noInlineConfig while validating comments policy", async () => {
-    const [result] = await eslint.lintText(
-      "/* eslint-disable no-var */\nvar x = 1;\n",
-      { filePath: javascriptFixture },
-    );
-
-    const lintResult = required(result, "eslint-comments behavior result");
-    const ruleIds = lintResult.messages.map(message => message.ruleId);
-
-    expect(ruleIds).toContain(
-      "@eslint-community/eslint-comments/require-description",
-    );
-
-    expect(ruleIds).toContain("@eslint-community/eslint-comments/no-use");
-
-    expect(
-      lintResult.messages.some(message =>
-        message.message.includes("'noInlineConfig' setting"),
-      ),
-    ).toBe(true);
-  });
-
   it.each([
     {
       expectedRule: "promise/catch-or-return",

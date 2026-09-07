@@ -70,11 +70,9 @@ describe("padding-line-between-statements behavior", () => {
 
   it("reports missing blank line before block statements", async () => {
     const source = [
-      "export function run(): void {",
-      "  const value = 1;",
-      "  if (value) {",
-      "    void value;",
-      "  }",
+      "const value = 1;",
+      "if (value) {",
+      "  console.log(value);",
       "}",
       "",
     ].join("\n");

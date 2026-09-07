@@ -2,11 +2,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { packageRoot, required } from "../helpers/index.js";
-import {
-  eslint,
-  javascriptFixture,
-  projectRoot,
-} from "./behavior.helper.js";
+import { eslint, javascriptFixture } from "./behavior.helper.js";
 
 const RESTRICTED_SYNTAX = "no-restricted-syntax";
 
@@ -14,7 +10,7 @@ describe("syntax and colocation behavior", () => {
   it("reports implementation declarations in barrel index files", async () => {
     const [result] = await eslint.lintText(
       "export const helper = (): number => 42;\n",
-      { filePath: path.resolve(projectRoot, "src/index.ts") },
+      { filePath: path.resolve(packageRoot, "src/index.ts") },
     );
 
     const lintResult = required(result, "barrel index behavior result");
@@ -29,7 +25,7 @@ describe("syntax and colocation behavior", () => {
   it("accepts pure re-exports in barrel index files", async () => {
     const [result] = await eslint.lintText(
       "export { valid } from \"./valid.js\";\n",
-      { filePath: path.resolve(projectRoot, "src/index.ts") },
+      { filePath: path.resolve(packageRoot, "src/index.ts") },
     );
 
     const lintResult = required(result, "barrel index valid result");
@@ -42,7 +38,7 @@ describe("syntax and colocation behavior", () => {
   it("reports plain JavaScript files outside fixtures", async () => {
     const [result] = await eslint.lintText(
       "export const value = 1;\n",
-      { filePath: path.resolve(projectRoot, "src/plain.js") },
+      { filePath: path.resolve(packageRoot, "src/plain.js") },
     );
 
     const lintResult = required(result, "plain js behavior result");
@@ -67,7 +63,10 @@ describe("syntax and colocation behavior", () => {
     "reports inline $name in implementation files",
     async ({ source }) => {
       const [result] = await eslint.lintText(source, {
-        filePath: path.resolve(packageRoot, "src/sample-feature.ts"),
+        filePath: path.resolve(
+          packageRoot,
+          "scripts/verify-tarball/verify-tarball.mts",
+        ),
       });
 
       const lintResult = required(result, "colocation implementation result");
@@ -83,7 +82,12 @@ describe("syntax and colocation behavior", () => {
   it("permits colocation in sibling type and helper files", async () => {
     const [typeResult] = await eslint.lintText(
       "export type Contract = { name: string };\n",
-      { filePath: path.resolve(packageRoot, "src/sample-feature.type.ts") },
+      {
+        filePath: path.resolve(
+          packageRoot,
+          "test/public-api/public-api.type.ts",
+        ),
+      },
     );
 
     expect(
@@ -92,7 +96,9 @@ describe("syntax and colocation behavior", () => {
 
     const [helperResult] = await eslint.lintText(
       "export function helper(): boolean { return true; }\n",
-      { filePath: path.resolve(packageRoot, "src/sample-feature.helper.ts") },
+      {
+        filePath: path.resolve(packageRoot, "test/behavior/behavior.helper.ts"),
+      },
     );
 
     expect(
@@ -122,7 +128,12 @@ describe("syntax and colocation behavior", () => {
   it("reports namespace imports from es-toolkit via restricted syntax", async () => {
     const [result] = await eslint.lintText(
       "import * as esToolkit from \"es-toolkit\";\nexport { esToolkit };\n",
-      { filePath: javascriptFixture },
+      {
+        filePath: path.resolve(
+          packageRoot,
+          "fixtures/sample.js",
+        ),
+      },
     );
 
     const lintResult = required(result, "namespace import behavior result");
@@ -136,5 +147,21 @@ describe("syntax and colocation behavior", () => {
     expect(restricted?.message).toContain(
       "Namespace imports from 'es-toolkit' are prohibited",
     );
+  });
+
+  it("restricts alternative utility libraries in favor of es-toolkit", async () => {
+    const [result] = await eslint.lintText(
+      "import _ from \"lodash\";\nexport { _ };\n",
+      { filePath: javascriptFixture },
+    );
+
+    const lintResult = required(result, "restricted imports behavior result");
+
+    const restricted = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-imports",
+    );
+
+    expect(restricted).toBeDefined();
+    expect(restricted?.message).toContain("es-toolkit");
   });
 });
