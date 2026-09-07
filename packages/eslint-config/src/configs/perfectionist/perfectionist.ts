@@ -7,7 +7,17 @@ const perfectionistRules: Linter.RulesRecord = {
     "error",
     { order: "asc", type: "natural" },
   ],
-  "perfectionist/sort-arrays": ["error", { order: "asc", type: "natural" }],
+  "perfectionist/sort-arrays": [
+    "error",
+    {
+      order: "asc",
+      type: "natural",
+      useConfigurationIf: {
+        matchesAstSelector:
+          "VariableDeclarator[id.name=/^(SORTED_|sorted)/] > ArrayExpression",
+      },
+    },
+  ],
   "perfectionist/sort-classes": ["error", { order: "asc", type: "natural" }],
   "perfectionist/sort-decorators": ["error", { order: "asc", type: "natural" }],
   "perfectionist/sort-enums": ["error", { order: "asc", type: "natural" }],

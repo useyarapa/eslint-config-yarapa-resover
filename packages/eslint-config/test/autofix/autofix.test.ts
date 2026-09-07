@@ -44,16 +44,23 @@ describe("autofix safety and idempotence", () => {
     expect(output.indexOf("from \"a\"")).toBeLessThan(output.indexOf("from \"z\""));
   });
 
-  it("sorts array elements by natural order", async () => {
+  it("sorts explicitly sortable arrays by natural order", async () => {
     const output = await fixTwice(
       yarapa,
-      "export const values = [\"item10\", \"item2\", \"item1\"];\n",
+      "export const sortedValues = [\"item10\", \"item2\", \"item1\"];\n",
       "fixtures/autofix/array.js",
     );
 
     expect(output).toBe(
-      "export const values = [\"item1\", \"item2\", \"item10\"];\n",
+      "export const sortedValues = [\"item1\", \"item2\", \"item10\"];\n",
     );
+  });
+
+  it("preserves semantic array order without explicit opt-in", async () => {
+    const source = "export const rule = [\"error\", \"always\"];\n";
+    const output = await fixTwice(yarapa, source, "fixtures/autofix/array.js");
+
+    expect(output).toBe(source);
   });
 
   it("normalizes template strings and object shorthand once", async () => {
