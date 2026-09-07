@@ -24,6 +24,7 @@ export async function fixTwice(
   });
 
   expect(first).toBeDefined();
+
   const firstResult = required(first, "first autofix lint result");
 
   expect(firstResult.fatalErrorCount).toBe(0);
@@ -35,6 +36,7 @@ export async function fixTwice(
   });
 
   expect(second).toBeDefined();
+
   const secondResult = required(second, "second autofix lint result");
 
   expect(secondResult.fatalErrorCount).toBe(0);

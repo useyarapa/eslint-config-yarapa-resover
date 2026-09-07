@@ -1,5 +1,16 @@
 import type { Linter } from "eslint";
 
+export const CONFIG_NAMES = {
+  baseLinterOptions: "yarapa/base/linter-options",
+  baseModernJs: "yarapa/base/modern-js",
+  sonarjs: "yarapa/sonarjs",
+  stylistic: "yarapa/stylistic",
+  typeChecked: "yarapa/type-checked",
+  typescript: "yarapa/typescript",
+  unicorn: "yarapa/unicorn",
+  vitest: "yarapa/vitest",
+} as const;
+
 /**
  * Resolve the final configured value for one rule.
  * @param config Flat Config array.

@@ -25,6 +25,9 @@ importers:
       "@eslint/config-inspector":
         specifier: 3.4.0
         version: 3.4.0(eslint@10.10.0(jiti@2.7.0)(supports-color@7.2.0))(srvx@0.12.7)
+      "@yarapa/eslint-config":
+        specifier: workspace:*
+        version: link:packages/eslint-config
       eslint:
         specifier: 10.10.0
         version: 10.10.0(jiti@2.7.0)(supports-color@7.2.0)

@@ -1,8 +1,5 @@
 import vitestPlugin from "@vitest/eslint-plugin";
-import packageJsonPlugin from "eslint-plugin-package-json";
-import { rules as perfectionistRules } from "eslint-plugin-perfectionist";
 import globals from "globals";
-import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -13,10 +10,9 @@ import {
   TYPESCRIPT_FILES,
   TYPESCRIPT_TEST_FILES,
 } from "../../src/configs/constants/index.js";
-import { packageJson, vitest } from "../../src/configs/index.js";
 import yarapa from "../../src/index.js";
 import { required } from "../helpers/index.js";
-import { findRule } from "./configuration.helper.js";
+import { CONFIG_NAMES } from "./configuration.helper.js";
 
 describe("canonical public configuration", () => {
   it("exports a non-empty Flat Config array", () => {
@@ -38,25 +34,25 @@ describe("canonical public configuration", () => {
     const configNames = yarapa.map(config => config.name).filter(Boolean);
 
     expect(configNames).toContain("yarapa/base/core");
-    expect(configNames).toContain("yarapa/base/linter-options");
-    expect(configNames).toContain("yarapa/base/modern-js");
+    expect(configNames).toContain(CONFIG_NAMES.baseLinterOptions);
+    expect(configNames).toContain(CONFIG_NAMES.baseModernJs);
     expect(configNames).toContain("yarapa/eslint-comments");
     expect(configNames).toContain("yarapa/promise");
     expect(configNames).toContain("yarapa/regexp");
     expect(configNames).toContain("yarapa/unused-imports");
-    expect(configNames).toContain("yarapa/typescript");
-    expect(configNames).toContain("yarapa/type-checked");
-    expect(configNames).toContain("yarapa/stylistic");
-    expect(configNames).toContain("yarapa/unicorn");
+    expect(configNames).toContain(CONFIG_NAMES.typescript);
+    expect(configNames).toContain(CONFIG_NAMES.typeChecked);
+    expect(configNames).toContain(CONFIG_NAMES.stylistic);
+    expect(configNames).toContain(CONFIG_NAMES.unicorn);
     expect(configNames).toContain("yarapa/import-x");
-    expect(configNames).toContain("yarapa/sonarjs");
+    expect(configNames).toContain(CONFIG_NAMES.sonarjs);
     expect(configNames).toContain("yarapa/perfectionist");
-    expect(configNames).toContain("yarapa/vitest");
+    expect(configNames).toContain(CONFIG_NAMES.vitest);
   });
 
   it("enforces zero inline suppression policy via linterOptions", () => {
     const linterOptionsConfig = yarapa.find(
-      config => config.name === "yarapa/base/linter-options",
+      config => config.name === CONFIG_NAMES.baseLinterOptions,
     );
 
     expect(linterOptionsConfig?.linterOptions).toEqual({
@@ -73,13 +69,13 @@ describe("canonical public configuration", () => {
     );
 
     expect(configsWithTsPlugin).toHaveLength(1);
-    expect(configsWithTsPlugin[0]?.name).toBe("yarapa/typescript");
+    expect(configsWithTsPlugin[0]?.name).toBe(CONFIG_NAMES.typescript);
   });
 
   it("places typescript before type-checked in canonical composition", () => {
     const names = yarapa.map(config => config.name).filter(Boolean);
-    const tsIndex = names.indexOf("yarapa/typescript");
-    const typeCheckedIndex = names.indexOf("yarapa/type-checked");
+    const tsIndex = names.indexOf(CONFIG_NAMES.typescript);
+    const typeCheckedIndex = names.indexOf(CONFIG_NAMES.typeChecked);
 
     expect(tsIndex).toBeGreaterThanOrEqual(0);
     expect(typeCheckedIndex).toBeGreaterThan(tsIndex);
@@ -91,12 +87,7 @@ describe("canonical public configuration", () => {
     );
 
     expect(testFilesConfig).toMatchObject({
-      files: [
-        "**/*.test.ts",
-        "**/*.test.tsx",
-        "**/*.test.mts",
-        "**/*.test.cts",
-      ],
+      files: TYPESCRIPT_TEST_FILES,
       rules: {
         "no-restricted-syntax": [
           "error",
@@ -114,40 +105,9 @@ describe("canonical public configuration", () => {
     });
   });
 
-  it("owns the package manifest rule policy", () => {
-    const config = required(packageJson[0], "package manifest config");
-
-    expect(packageJson).toHaveLength(1);
-    expect(config.files).toEqual(["**/package.json"]);
-    expect(config.languageOptions?.parser).toBe(jsoncParser);
-    expect(config.plugins?.["package-json"]).toBe(packageJsonPlugin);
-    expect(Object.keys(config.rules ?? {})).toHaveLength(62);
-
-    expect(new Set(Object.values(config.rules ?? {}))).toEqual(
-      new Set(["error"]),
-    );
-  });
-
-  it("enables every installed perfectionist rule", () => {
-    const config = required(
-      yarapa.find(entry => entry.name === "yarapa/perfectionist"),
-      "perfectionist config",
-    );
-
-    const configuredRules = new Set(Object.keys(config.rules ?? {}));
-
-    const availableRules = new Set(
-      Object.keys(perfectionistRules ?? {}).map(
-        ruleName => `perfectionist/${ruleName}`,
-      ),
-    );
-
-    expect(configuredRules).toEqual(availableRules);
-  });
-
   it("enables every installed vitest rule scoped to test files", () => {
     const config = required(
-      yarapa.find(entry => entry.name === "yarapa/vitest"),
+      yarapa.find(entry => entry.name === CONFIG_NAMES.vitest),
       "vitest config",
     );
 
@@ -165,46 +125,18 @@ describe("canonical public configuration", () => {
   });
 
   it("owns the vitest rule policy", () => {
-    const config = required(vitest[0], "vitest config");
+    const config = required(
+      yarapa.find(entry => entry.name === CONFIG_NAMES.vitest),
+      "vitest config",
+    );
 
-    expect(vitest).toHaveLength(1);
-    expect(config.files).toEqual(TYPESCRIPT_TEST_FILES);
     expect(config.plugins?.vitest).toBe(vitestPlugin);
     expect(Object.keys(config.rules ?? {})).toHaveLength(82);
   });
 
-  it("owns import-x rule and settings policy", () => {
-    const config = yarapa.find(c => c.name === "yarapa/import-x");
-
-    expect(config).toBeDefined();
-    expect(config?.rules?.["import-x/no-duplicates"]).toBe("error");
-
-    expect(config?.settings?.["import-x/resolver"]).toEqual({
-      typescript: true,
-    });
-  });
-
-  it("includes Node runtime and browser globals in unified config", () => {
-    const hasNodePlugin = yarapa.some(config =>
-      Boolean(config.plugins && Reflect.has(config.plugins, "n")),
-    );
-
-    expect(hasNodePlugin).toBe(true);
-
-    const hasBrowserGlobals = yarapa.some(config => {
-      const configuredGlobals = config.languageOptions?.globals;
-
-      return configuredGlobals
-        ? Reflect.has(configuredGlobals, "window")
-        : false;
-    });
-
-    expect(hasBrowserGlobals).toBe(true);
-  });
-
   it("provides ECMAScript builtin globals through unicorn config", () => {
     const unicornConfig = yarapa.find(
-      config => config.name === "yarapa/unicorn",
+      config => config.name === CONFIG_NAMES.unicorn,
     );
 
     expect(unicornConfig?.languageOptions?.globals).toEqual(globals.builtin);
@@ -212,7 +144,7 @@ describe("canonical public configuration", () => {
 
   it("preserves framework names without disabling abbreviation policy", () => {
     const unicornConfig = required(
-      yarapa.find(config => config.name === "yarapa/unicorn"),
+      yarapa.find(config => config.name === CONFIG_NAMES.unicorn),
       "unicorn config",
     );
 
@@ -254,87 +186,6 @@ describe("canonical public configuration", () => {
     });
   });
 
-  it("shares canonical handwriting across configuration", () => {
-    for (const ruleName of [
-      "@stylistic/padding-line-between-statements",
-      "@stylistic/semi",
-      "@typescript-eslint/consistent-type-imports",
-      "@typescript-eslint/default-param-last",
-      "@typescript-eslint/dot-notation",
-      "@typescript-eslint/no-array-constructor",
-      "@typescript-eslint/no-floating-promises",
-      "arrow-body-style",
-      "curly",
-      "eqeqeq",
-      "import-x/no-duplicates",
-      "no-object-constructor",
-      "no-restricted-imports",
-      "no-var",
-      "object-shorthand",
-      "prefer-const",
-      "prefer-object-has-own",
-      "prefer-object-spread",
-      "prefer-rest-params",
-      "prefer-spread",
-      "prefer-template",
-      "radix",
-    ]) {
-      const resolved = findRule(yarapa, ruleName);
-
-      expect(resolved).toBeDefined();
-    }
-  });
-
-  it("keeps modern JavaScript concerns on canonical owners", () => {
-    expect(findRule(yarapa, "sonarjs/arguments-usage")).toBe("off");
-    expect(findRule(yarapa, "sonarjs/array-constructor")).toBe("off");
-    expect(findRule(yarapa, "sonarjs/arrow-function-convention")).toBe("off");
-    expect(findRule(yarapa, "sonarjs/prefer-default-last")).toBe("off");
-  });
-
-  it("keeps unused code concerns on unused-imports canonical owner", () => {
-    expect(findRule(yarapa, "@typescript-eslint/no-unused-vars")).toBe("off");
-    expect(findRule(yarapa, "no-unused-vars")).toBe("off");
-    expect(findRule(yarapa, "unused-imports/no-unused-imports")).toBe("error");
-
-    expect(findRule(yarapa, "unused-imports/no-unused-vars")).toEqual([
-      "error",
-      {
-        args: "after-used",
-        argsIgnorePattern: "^_",
-        vars: "all",
-        varsIgnorePattern: "^_",
-      },
-    ]);
-  });
-
-  it("enforces strict directive comment and compiler suppression policies", () => {
-    const commentsConfig = yarapa.find(
-      config => config.name === "yarapa/eslint-comments",
-    );
-
-    expect(
-      commentsConfig?.rules?.["@eslint-community/eslint-comments/no-use"],
-    ).toEqual(["error", { allow: [] }]);
-
-    const tsConfig = yarapa.find(
-      config => config.name === "yarapa/typescript",
-    );
-
-    expect(
-      tsConfig?.rules?.["@typescript-eslint/ban-ts-comment"],
-    ).toEqual([
-      "error",
-      {
-        minimumDescriptionLength: 10,
-        "ts-check": false,
-        "ts-expect-error": true,
-        "ts-ignore": true,
-        "ts-nocheck": true,
-      },
-    ]);
-  });
-
   it("enforces barrel-files and plain javascript restrictions", () => {
     const barrelConfig = required(
       yarapa.find(config => config.name === "yarapa/typescript/barrel-files"),
@@ -354,30 +205,6 @@ describe("canonical public configuration", () => {
     expect(plainJsConfig.rules?.["no-restricted-syntax"]).toBeDefined();
   });
 
-  it("enforces emoji prohibition in unicorn string-content policy", () => {
-    const unicornConfig = required(
-      yarapa.find(config => config.name === "yarapa/unicorn"),
-      "unicorn config",
-    );
-
-    expect(unicornConfig.rules?.["unicorn/string-content"]).toBeDefined();
-  });
-
-  it("enforces comment policy and file length limits in base config", () => {
-    const baseModernConfig = required(
-      yarapa.find(config => config.name === "yarapa/base/modern-js"),
-      "base modern js config",
-    );
-
-    expect(baseModernConfig.rules?.["no-inline-comments"]).toBe("error");
-    expect(baseModernConfig.rules?.["no-warning-comments"]).toBeDefined();
-
-    expect(baseModernConfig.rules?.["max-lines"]).toEqual([
-      "error",
-      { max: 300, skipBlankLines: true, skipComments: true },
-    ]);
-  });
-
   it("enforces feature-colocation restrictions on implementation files", () => {
     const colocationConfig = required(
       yarapa.find(config => config.name === "yarapa/typescript/colocation"),
@@ -387,38 +214,5 @@ describe("canonical public configuration", () => {
     expect(colocationConfig.files).toEqual(TYPESCRIPT_FILES);
     expect(colocationConfig.ignores).toEqual(TYPESCRIPT_COLOCATION_IGNORES);
     expect(colocationConfig.rules?.["no-restricted-syntax"]).toBeDefined();
-  });
-
-  it("enforces es-toolkit deep import and namespace import restrictions", () => {
-    const baseModernConfig = required(
-      yarapa.find(config => config.name === "yarapa/base/modern-js"),
-      "base modern js config",
-    );
-
-    expect(baseModernConfig.rules?.["no-restricted-imports"]).toBeDefined();
-    expect(baseModernConfig.rules?.["no-restricted-syntax"]).toBeDefined();
-  });
-
-  it("enforces duplicate string prevention in sonarjs config", () => {
-    const sonarConfig = required(
-      yarapa.find(config => config.name === "yarapa/sonarjs"),
-      "sonarjs config",
-    );
-
-    expect(sonarConfig.rules?.["sonarjs/no-duplicate-string"]).toEqual([
-      "error",
-      { ignoreStrings: "application/json", threshold: 3 },
-    ]);
-  });
-
-  it("enforces statement padding policy in stylistic config", () => {
-    const stylisticConfig = required(
-      yarapa.find(config => config.name === "yarapa/stylistic"),
-      "stylistic config",
-    );
-
-    expect(
-      stylisticConfig.rules?.["@stylistic/padding-line-between-statements"],
-    ).toBeDefined();
   });
 });

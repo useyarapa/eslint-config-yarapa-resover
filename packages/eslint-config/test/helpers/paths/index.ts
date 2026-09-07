@@ -1,1 +1,1 @@
-export { configsDir, packageRoot } from "./paths.js";
+export { configsDirectory, packageRoot } from "./paths.js";

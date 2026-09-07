@@ -1,4 +1,3 @@
-import { spawnSync } from "node:child_process";
 import {
   mkdirSync,
   mkdtempSync,
@@ -10,38 +9,12 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { PACKAGE_SPECIFIER, run } from "./verify-tarball.helper.mts";
+
+const EXPECT_RULE_CALL = "await expectRule(";
+
 if (process.platform === "win32" && !process.env.PNPM_HOME) {
   throw new Error("PNPM_HOME is required for the Windows consumer smoke test");
-}
-
-/**
- * Run a command and throw when it exits unsuccessfully.
- * @param command Executable to run.
- * @param arguments_ Arguments passed to the executable.
- * @param cwd Working directory for the command.
- * @param expectedStatus Expected process exit status.
- */
-function run(
-  command: string,
-  arguments_: string[],
-  cwd: string,
-  expectedStatus = 0,
-): void {
-  const result = spawnSync(command, arguments_, {
-    cwd,
-    env: process.env,
-    stdio: "inherit",
-  });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (result.status !== expectedStatus) {
-    throw new Error(
-      `${command} ${arguments_.join(" ")} exited with ${result.status}; expected ${expectedStatus}`,
-    );
-  }
 }
 
 const packageRoot = fileURLToPath(new URL("../../", import.meta.url));
@@ -56,6 +29,7 @@ export function verifyTarball(): void {
 
   mkdirSync(packageDirectory, { recursive: true });
   mkdirSync(consumerDirectory, { recursive: true });
+
   const windowsPnpm = path.resolve(process.env.PNPM_HOME ?? "", "pnpm.exe");
   const pnpm = process.platform === "win32" ? windowsPnpm : "pnpm";
   const node = process.execPath;
@@ -109,7 +83,7 @@ export function verifyTarball(): void {
     writeFileSync(
       path.resolve(consumerDirectory, "verify.mjs"),
       [
-        `import yarapa from "@yarapa/eslint-config";`,
+        `import yarapa from "${PACKAGE_SPECIFIER}";`,
         "",
         "if (!Array.isArray(yarapa) || yarapa.length === 0) {",
         `  throw new Error("Expected non-empty Flat Config array");`,
@@ -122,7 +96,7 @@ export function verifyTarball(): void {
       path.resolve(consumerDirectory, "verify-behavior.mjs"),
       [
         `import { ESLint } from "eslint";`,
-        `import yarapa from "@yarapa/eslint-config";`,
+        `import yarapa from "${PACKAGE_SPECIFIER}";`,
         "",
         "async function expectRule(config, filePath, source, expectedRule) {",
         "  const eslint = new ESLint({",
@@ -140,28 +114,28 @@ export function verifyTarball(): void {
         "  }",
         "}",
         "",
-        "await expectRule(",
+        EXPECT_RULE_CALL,
         "  yarapa,",
         `  "sample-invalid.js",`,
         String.raw`  "export function value() { var answer = 42; return answer; }\n",`,
         `  "no-var",`,
         ");",
         "",
-        "await expectRule(",
+        EXPECT_RULE_CALL,
         "  yarapa,",
         `  "sample.ts",`,
         String.raw`  "export const value: any = 1;\n",`,
         `  "@typescript-eslint/no-explicit-any",`,
         ");",
         "",
-        "await expectRule(",
+        EXPECT_RULE_CALL,
         "  yarapa,",
         `  "sample.json",`,
         String.raw`  '{\n  "name": "one",\n  "name": "two"\n}\n',`,
         `  "jsonc/no-dupe-keys",`,
         ");",
         "",
-        "await expectRule(",
+        EXPECT_RULE_CALL,
         "  yarapa,",
         `  "package.json",`,
         String.raw`  '{\n  "version": "1.0.0",\n  "name": "consumer"\n}\n',`,
@@ -174,7 +148,7 @@ export function verifyTarball(): void {
     writeFileSync(
       eslintConfigPath,
       [
-        `import yarapa from "@yarapa/eslint-config";`,
+        `import yarapa from "${PACKAGE_SPECIFIER}";`,
         "",
         "export default yarapa;",
         "",
@@ -218,6 +192,7 @@ export function verifyTarball(): void {
 
 const scriptPath = process.argv[1];
 const currentPath = fileURLToPath(import.meta.url);
+
 const isDirectExecution = Boolean(
   scriptPath && path.resolve(scriptPath) === currentPath,
 );

@@ -1,6 +1,5 @@
+import yarapa from "@yarapa/eslint-config";
 import { defineConfig, globalIgnores } from "eslint/config";
-
-import yarapa from "./packages/eslint-config/dist/index.mjs";
 
 export default defineConfig(
   globalIgnores(

@@ -8,6 +8,8 @@ import {
   PADDING_LINE_BETWEEN_STATEMENTS,
 } from "./stylistic.constant.js";
 
+const PARENS_NEW_LINE = "parens-new-line" as const;
+
 const stylisticRules: Linter.RulesRecord = {
   "@stylistic/array-bracket-spacing": ["error", "never"],
   "@stylistic/arrow-parens": [
@@ -87,14 +89,14 @@ const stylisticRules: Linter.RulesRecord = {
   "@stylistic/jsx-wrap-multilines": [
     "error",
     {
-      arrow: "parens-new-line",
-      assignment: "parens-new-line",
-      condition: "parens-new-line",
-      declaration: "parens-new-line",
-      logical: "parens-new-line",
-      prop: "parens-new-line",
-      propertyValue: "parens-new-line",
-      return: "parens-new-line",
+      arrow: PARENS_NEW_LINE,
+      assignment: PARENS_NEW_LINE,
+      condition: PARENS_NEW_LINE,
+      declaration: PARENS_NEW_LINE,
+      logical: PARENS_NEW_LINE,
+      prop: PARENS_NEW_LINE,
+      propertyValue: PARENS_NEW_LINE,
+      return: PARENS_NEW_LINE,
     },
   ],
   "@stylistic/key-spacing": ["error", { afterColon: true, beforeColon: false }],

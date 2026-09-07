@@ -9,29 +9,29 @@ export const FORBIDDEN_CONFIG_PATTERNS = [
 
 /**
  * Inspect config files under directory for forbidden pattern violations.
- * @param configsDir Path to directory containing production config
+ * @param configsDirectory Path to directory containing production config
  *   subdirectories.
  * @param patterns Prohibited patterns in production configs.
  * @returns Array of formatted violation strings.
  */
 export function collectConfigViolations(
-  configsDir: string,
+  configsDirectory: string,
   patterns: readonly RegExp[],
 ): string[] {
   const subdirectories = fs
-    .readdirSync(configsDir, { withFileTypes: true })
+    .readdirSync(configsDirectory, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
     .map(dirent => dirent.name);
 
   const configFiles = subdirectories
-    .map(sub => path.join(configsDir, sub, `${sub}.ts`))
+    .map(sub => path.join(configsDirectory, sub, `${sub}.ts`))
     .filter(filePath => fs.existsSync(filePath));
 
   const violations: string[] = [];
 
   for (const filePath of configFiles) {
     const content = fs.readFileSync(filePath, "utf8");
-    const relativePath = path.relative(configsDir, filePath);
+    const relativePath = path.relative(configsDirectory, filePath);
 
     for (const pattern of patterns) {
       if (pattern.test(content)) {
