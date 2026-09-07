@@ -119,7 +119,7 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/no-debug-commands-in-ui-tests": "error",
   "sonarjs/no-default-utility-imports": "error",
   "sonarjs/no-duplicate-string": [
-    "off",
+    "error",
     { ignoreStrings: "application/json", threshold: 3 },
   ],
   "sonarjs/no-duplicated-branches": "error",

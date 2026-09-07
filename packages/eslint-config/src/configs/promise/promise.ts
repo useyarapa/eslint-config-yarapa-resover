@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import promisePlugin from "eslint-plugin-promise";
 
+import type { Plugin } from "./promise.type.js";
+
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
 
 const promiseRules: Linter.RulesRecord = {
@@ -18,8 +20,6 @@ const promiseRules: Linter.RulesRecord = {
   "promise/param-names": "error",
   "promise/valid-params": "error",
 };
-
-type Plugin = NonNullable<Linter.Config["plugins"]>[string];
 
 export const promise: Linter.Config[] = [
   {

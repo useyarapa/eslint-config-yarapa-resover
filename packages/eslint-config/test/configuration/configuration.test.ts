@@ -9,6 +9,8 @@ import {
   INDEX_FILES,
   PLAIN_JAVASCRIPT_FILES,
   REACT_FILES,
+  TYPESCRIPT_COLOCATION_IGNORES,
+  TYPESCRIPT_FILES,
   TYPESCRIPT_TEST_FILES,
 } from "../../src/configs/constants/index.js";
 import { packageJson, vitest } from "../../src/configs/index.js";
@@ -350,6 +352,36 @@ describe("canonical public configuration", () => {
     expect(baseModernConfig.rules?.["max-lines"]).toEqual([
       "error",
       { max: 300, skipBlankLines: true, skipComments: true },
+    ]);
+  });
+
+  it("enforces feature-colocation restrictions on implementation files", () => {
+    const colocationConfig = required(
+      yarapa.find(config => config.name === "yarapa/typescript/colocation"),
+      "typescript colocation config",
+    );
+    expect(colocationConfig.files).toEqual(TYPESCRIPT_FILES);
+    expect(colocationConfig.ignores).toEqual(TYPESCRIPT_COLOCATION_IGNORES);
+    expect(colocationConfig.rules?.["no-restricted-syntax"]).toBeDefined();
+  });
+
+  it("enforces es-toolkit deep import and namespace import restrictions", () => {
+    const baseModernConfig = required(
+      yarapa.find(config => config.name === "yarapa/base/modern-js"),
+      "base modern js config",
+    );
+    expect(baseModernConfig.rules?.["no-restricted-imports"]).toBeDefined();
+    expect(baseModernConfig.rules?.["no-restricted-syntax"]).toBeDefined();
+  });
+
+  it("enforces duplicate string prevention in sonarjs config", () => {
+    const sonarConfig = required(
+      yarapa.find(config => config.name === "yarapa/sonarjs"),
+      "sonarjs config",
+    );
+    expect(sonarConfig.rules?.["sonarjs/no-duplicate-string"]).toEqual([
+      "error",
+      { ignoreStrings: "application/json", threshold: 3 },
     ]);
   });
 });

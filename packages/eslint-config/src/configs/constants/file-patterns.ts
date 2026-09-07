@@ -38,6 +38,20 @@ export const TYPESCRIPT_FILES = TYPESCRIPT_EXTENSIONS.map(
 export const TYPESCRIPT_TEST_FILES = TYPESCRIPT_EXTENSIONS.map(
   extension => `**/*.test${extension}`,
 );
+export const TYPESCRIPT_COLOCATION_IGNORES = [
+  "**/*.constant.*",
+  "**/*.helper.*",
+  "**/*.type.*",
+  "**/*.util.*",
+  "**/*.test.*",
+  "**/*.d.*",
+  "**/constants/**",
+  "**/helpers/**",
+  "**/utils/**",
+  "**/types/**",
+  "**/fixtures/**",
+  ...INDEX_FILES,
+];
 export const JAVASCRIPT_AND_TYPESCRIPT_FILES = [
   ...JAVASCRIPT_FILES,
   ...TYPESCRIPT_FILES,

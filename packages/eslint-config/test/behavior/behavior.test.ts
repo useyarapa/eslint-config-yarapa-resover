@@ -499,4 +499,95 @@ describe("shared YARAPA behavior", () => {
     expect(ruleIds).toContain("no-inline-comments");
     expect(ruleIds).toContain("no-warning-comments");
   });
+
+  it.each([
+    {
+      name: "type declarations",
+      source: "export type Contract = { name: string };\n",
+    },
+    {
+      name: "standalone helper functions",
+      source: "function helper(): boolean { return true; }\nvoid helper();\n",
+    },
+  ])(
+    "reports inline $name in implementation files",
+    async ({ source }) => {
+      const [result] = await eslint.lintText(source, {
+        filePath: path.resolve(packageRoot, "src/sample-feature.ts"),
+      });
+      const lintResult = required(result, "colocation implementation result");
+      const restrictedSyntax = lintResult.messages.find(
+        message => message.ruleId === "no-restricted-syntax",
+      );
+
+      expect(restrictedSyntax).toBeDefined();
+    },
+  );
+
+  it("permits colocation in sibling type and helper files", async () => {
+    const [typeResult] = await eslint.lintText(
+      "export type Contract = { name: string };\n",
+      { filePath: path.resolve(packageRoot, "src/sample-feature.type.ts") },
+    );
+    expect(
+      typeResult?.messages.map(message => message.ruleId),
+    ).not.toContain("no-restricted-syntax");
+
+    const [helperResult] = await eslint.lintText(
+      "export function helper(): boolean { return true; }\n",
+      { filePath: path.resolve(packageRoot, "src/sample-feature.helper.ts") },
+    );
+    expect(
+      helperResult?.messages.map(message => message.ruleId),
+    ).not.toContain("no-restricted-syntax");
+  });
+
+  it("reports deep imports from es-toolkit via restricted imports", async () => {
+    const [result] = await eslint.lintText(
+      "import { debounce } from \"es-toolkit/compat\";\nexport { debounce };\n",
+      { filePath: javascriptFixture },
+    );
+    const lintResult = required(result, "deep import behavior result");
+    const restrictedMessage = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-imports",
+    );
+
+    expect(restrictedMessage).toBeDefined();
+    expect(restrictedMessage?.message).toContain(
+      "Deep imports from es-toolkit are prohibited",
+    );
+  });
+
+  it("reports namespace imports from es-toolkit via restricted syntax", async () => {
+    const [result] = await eslint.lintText(
+      "import * as esToolkit from \"es-toolkit\";\nexport { esToolkit };\n",
+      { filePath: javascriptFixture },
+    );
+    const lintResult = required(result, "namespace import behavior result");
+    const restrictedMessage = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-syntax",
+    );
+
+    expect(restrictedMessage).toBeDefined();
+    expect(restrictedMessage?.message).toContain(
+      "Namespace imports from 'es-toolkit' are prohibited",
+    );
+  });
+
+  it("reports duplicate string literals via sonarjs policy", async () => {
+    const source = [
+      "export const first = \"duplicated-magic-string-token\";",
+      "export const second = \"duplicated-magic-string-token\";",
+      "export const third = \"duplicated-magic-string-token\";",
+      "",
+    ].join("\n");
+    const [result] = await eslint.lintText(source, {
+      filePath: javascriptFixture,
+    });
+    const lintResult = required(result, "sonarjs duplicate string result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "sonarjs/no-duplicate-string",
+    );
+  });
 });

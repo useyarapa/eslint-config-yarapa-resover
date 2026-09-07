@@ -5,6 +5,7 @@ import { parser, plugin } from "typescript-eslint";
 import {
   INDEX_FILES,
   PLAIN_JAVASCRIPT_FILES,
+  TYPESCRIPT_COLOCATION_IGNORES,
   TYPESCRIPT_DECLARATION_FILES,
   TYPESCRIPT_FILES,
   TYPESCRIPT_TEST_FILES,
@@ -94,6 +95,21 @@ const typescriptBarrelRules: Linter.RulesRecord = {
   ],
 };
 
+const typescriptColocationRules: Linter.RulesRecord = {
+  "no-restricted-syntax": [
+    "error",
+    {
+      message: "Move type declarations to a sibling .type.ts file.",
+      selector: "TSTypeAliasDeclaration, TSInterfaceDeclaration",
+    },
+    {
+      message: "Move helper functions to a sibling .helper.ts file.",
+      selector:
+        "Program > FunctionDeclaration, Program > VariableDeclaration > VariableDeclarator[init.type='ArrowFunctionExpression'], Program > VariableDeclaration > VariableDeclarator[init.type='FunctionExpression']",
+    },
+  ],
+};
+
 const typescriptDeclarationRules: Linter.RulesRecord = {
   "@typescript-eslint/no-empty-object-type": [
     "error",
@@ -147,6 +163,12 @@ export const typescript: Linter.Config[] = [
     files: INDEX_FILES,
     name: "yarapa/typescript/barrel-files",
     rules: typescriptBarrelRules,
+  },
+  {
+    files: TYPESCRIPT_FILES,
+    ignores: TYPESCRIPT_COLOCATION_IGNORES,
+    name: "yarapa/typescript/colocation",
+    rules: typescriptColocationRules,
   },
   {
     files: TYPESCRIPT_DECLARATION_FILES,

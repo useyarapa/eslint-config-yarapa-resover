@@ -1,7 +1,11 @@
 import type { Linter } from "eslint";
 
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
-import { ES_TOOLKIT_ALTERNATIVE_MESSAGE } from "./base.constant.js";
+import {
+  ES_TOOLKIT_ALTERNATIVE_MESSAGE,
+  ES_TOOLKIT_DEEP_IMPORT_MESSAGE,
+  ES_TOOLKIT_NAMESPACE_IMPORT_MESSAGE,
+} from "./base.constant.js";
 
 const coreRules: Linter.RulesRecord = {
   "constructor-super": "error",
@@ -107,6 +111,10 @@ const modernJavaScriptRules: Linter.RulesRecord = {
       ],
       patterns: [
         {
+          group: ["es-toolkit/*"],
+          message: ES_TOOLKIT_DEEP_IMPORT_MESSAGE,
+        },
+        {
           group: ["lodash/*", "lodash-es/*"],
           message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
         },
@@ -119,6 +127,14 @@ const modernJavaScriptRules: Linter.RulesRecord = {
           message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
         },
       ],
+    },
+  ],
+  "no-restricted-syntax": [
+    "error",
+    {
+      message: ES_TOOLKIT_NAMESPACE_IMPORT_MESSAGE,
+      selector:
+        "ImportDeclaration[source.value='es-toolkit'] > ImportNamespaceSpecifier",
     },
   ],
   "no-var": "error",
