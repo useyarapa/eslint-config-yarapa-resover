@@ -7,9 +7,9 @@ const importXRules: Linter.RulesRecord = {
   "import-x/export": "error",
   "import-x/named": "off",
   "import-x/namespace": "error",
-  "import-x/no-duplicates": "warn",
-  "import-x/no-named-as-default": "warn",
-  "import-x/no-named-as-default-member": "warn",
+  "import-x/no-duplicates": "error",
+  "import-x/no-named-as-default": "error",
+  "import-x/no-named-as-default-member": "error",
   "import-x/no-unresolved": "error",
 };
 

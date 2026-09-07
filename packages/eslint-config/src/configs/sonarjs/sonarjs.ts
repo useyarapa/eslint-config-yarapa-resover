@@ -315,17 +315,10 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/xml-parser-xxe": "error",
 };
 
-const sonarjsSettings: Record<string, unknown> = {
-  react: {
-    version: "999.999.999",
-  },
-};
-
 export const sonarjs: Linter.Config[] = [
   {
     name: "yarapa/sonarjs",
     plugins: { sonarjs: sonarjsPlugin },
     rules: sonarjsRules,
-    settings: sonarjsSettings,
   },
 ];
