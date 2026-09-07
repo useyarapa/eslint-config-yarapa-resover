@@ -5,7 +5,6 @@ import sonarjsPlugin from "eslint-plugin-sonarjs";
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
 
 const sonarjsRules: Linter.RulesRecord = {
-  "sonarjs/anchor-precedence": "error",
   "sonarjs/argument-type": "error",
   "sonarjs/arguments-order": "error",
   "sonarjs/arguments-usage": "off",
@@ -72,9 +71,7 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/dompurify-unsafe-config": "error",
   "sonarjs/dynamically-constructed-templates": "error",
   "sonarjs/elseif-without-else": "off",
-  "sonarjs/empty-string-repetition": "error",
   "sonarjs/encryption-secure-mode": "error",
-  "sonarjs/existing-groups": "error",
   "sonarjs/expression-complexity": ["off", { max: 3 }],
   "sonarjs/file-header": [
     "off",
@@ -127,7 +124,6 @@ const sonarjsRules: Linter.RulesRecord = {
   ],
   "sonarjs/no-duplicated-branches": "error",
   "sonarjs/no-element-overwrite": "error",
-  "sonarjs/no-empty-after-reluctant": "error",
   "sonarjs/no-empty-collection": "error",
   "sonarjs/no-equals-in-for-termination": "error",
   "sonarjs/no-extra-arguments": "error",
@@ -227,7 +223,6 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/pseudo-random": "error",
   "sonarjs/public-static-readonly": "error",
   "sonarjs/publicly-writable-directories": "error",
-  "sonarjs/regex-complexity": ["error", { threshold: 20 }],
   "sonarjs/review-blockchain-mnemonic": "error",
   "sonarjs/session-regeneration": "error",
   "sonarjs/shorthand-property-grouping": "off",
@@ -239,8 +234,6 @@ const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/table-header-reference": "error",
   "sonarjs/todo-tag": "error",
   "sonarjs/too-many-break-or-continue-in-loop": "off",
-  "sonarjs/unicode-aware-regex": "off",
-  "sonarjs/unused-named-groups": "error",
   "sonarjs/unverified-certificate": "error",
   "sonarjs/unverified-hostname": "error",
   "sonarjs/updated-loop-counter": "error",
