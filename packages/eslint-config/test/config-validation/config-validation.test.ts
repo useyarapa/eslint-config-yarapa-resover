@@ -84,9 +84,11 @@ describe("Flat Config validation", () => {
         path.resolve(packageRoot, SAMPLE_FILES[0]),
       ),
     ).resolves.not.toHaveProperty(["rules", "jsonc/no-dupe-keys"]);
+
     await expect(
       eslint.calculateConfigForFile(jsonPath),
     ).resolves.toHaveProperty(["rules", "jsonc/no-dupe-keys"]);
+
     await expect(
       eslint.calculateConfigForFile(jsonPath),
     ).resolves.not.toHaveProperty(["rules", "promise/catch-or-return"]);

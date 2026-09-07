@@ -13,6 +13,7 @@ const packageJson = JSON.parse(
 describe("public API", () => {
   it("publishes as a public scoped package with provenance", () => {
     expect(packageJson.name).toBe("@yarapa/eslint-config");
+
     expect(packageJson.publishConfig).toEqual({
       access: "public",
       provenance: true,
