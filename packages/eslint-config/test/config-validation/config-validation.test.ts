@@ -3,14 +3,10 @@ import { describe, expect, it } from "vitest";
 
 import yarapa from "../../src/index.js";
 import { eslintForConfigs, packageRoot } from "../helpers/index.js";
-
-const sampleFiles = [
-  "fixtures/projects/typed/src/valid.ts",
-  "fixtures/projects/untyped/index.js",
-] as const;
+import { SAMPLE_FILES } from "./config-validation.helper.js";
 
 describe("Flat Config validation", () => {
-  it.each(sampleFiles)("resolves configuration for %s", async sampleFile => {
+  it.each(SAMPLE_FILES)("resolves configuration for %s", async sampleFile => {
     await expect(
       eslintForConfigs(yarapa).calculateConfigForFile(
         path.resolve(packageRoot, sampleFile),
@@ -24,7 +20,7 @@ describe("Flat Config validation", () => {
 
     await expect(
       eslint.calculateConfigForFile(
-        path.resolve(packageRoot, sampleFiles[0]),
+        path.resolve(packageRoot, SAMPLE_FILES[0]),
       ),
     ).resolves.not.toHaveProperty(["rules", "jsonc/no-dupe-keys"]);
     await expect(

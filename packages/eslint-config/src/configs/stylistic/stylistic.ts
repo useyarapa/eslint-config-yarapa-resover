@@ -3,8 +3,7 @@ import type { Linter } from "eslint";
 import stylisticPlugin from "@stylistic/eslint-plugin";
 
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
-
-const MAX_LINE_LENGTH = 80;
+import { MAX_LINE_LENGTH } from "./stylistic.constant.js";
 
 const stylisticRules: Linter.RulesRecord = {
   "@stylistic/array-bracket-spacing": ["error", "never"],

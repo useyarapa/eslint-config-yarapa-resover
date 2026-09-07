@@ -2,11 +2,8 @@ import type { Linter } from "eslint";
 
 import importXPlugin from "eslint-plugin-import-x";
 
-import {
-  JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS,
-  JAVASCRIPT_AND_TYPESCRIPT_FILES,
-  TYPESCRIPT_EXTENSIONS,
-} from "../constants/index.js";
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+import { IMPORT_X_SETTINGS } from "./import-x.constant.js";
 
 const importXRules: Linter.RulesRecord = {
   "import-x/default": "error",
@@ -19,23 +16,12 @@ const importXRules: Linter.RulesRecord = {
   "import-x/no-unresolved": "error",
 };
 
-const importXSettings: Record<string, unknown> = {
-  "import-x/extensions": JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS,
-  "import-x/external-module-folders": ["node_modules", "node_modules/@types"],
-  "import-x/parsers": {
-    "@typescript-eslint/parser": TYPESCRIPT_EXTENSIONS,
-  },
-  "import-x/resolver": {
-    typescript: true,
-  },
-};
-
 export const importX: Linter.Config[] = [
   {
     files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/import-x",
     plugins: { "import-x": importXPlugin },
     rules: importXRules,
-    settings: importXSettings,
+    settings: IMPORT_X_SETTINGS,
   },
 ];

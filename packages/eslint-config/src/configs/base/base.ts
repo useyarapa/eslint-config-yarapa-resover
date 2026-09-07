@@ -1,6 +1,7 @@
 import type { Linter } from "eslint";
 
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+import { ES_TOOLKIT_ALTERNATIVE_MESSAGE } from "./base.constant.js";
 
 const coreRules: Linter.RulesRecord = {
   "constructor-super": "error",
@@ -86,31 +87,31 @@ const modernJavaScriptRules: Linter.RulesRecord = {
     {
       paths: [
         {
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
           name: "lodash",
         },
         {
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
           name: "lodash-es",
         },
         {
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
           name: "underscore",
         },
-        { message: "Use es-toolkit or native methods instead.", name: "ramda" },
+        { message: ES_TOOLKIT_ALTERNATIVE_MESSAGE, name: "ramda" },
       ],
       patterns: [
         {
           group: ["lodash/*", "lodash-es/*"],
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
         },
         {
           group: ["underscore/*"],
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
         },
         {
           group: ["ramda/*"],
-          message: "Use es-toolkit or native methods instead.",
+          message: ES_TOOLKIT_ALTERNATIVE_MESSAGE,
         },
       ],
     },
