@@ -369,7 +369,10 @@ describe("shared YARAPA behavior", () => {
     async () => {
       const testSource = "describe.only(\"sample\", () => {});\n";
       const [result] = await eslint.lintText(testSource, {
-        filePath: path.resolve(projectRoot, "src/sample.test.ts"),
+        filePath: path.resolve(
+          packageRoot,
+          "test/behavior/behavior.test.ts",
+        ),
       });
       const lintResult = required(result, "vitest behavior result");
 
