@@ -1,9 +1,9 @@
 import type { Linter } from "eslint";
 
 import unicornPlugin from "eslint-plugin-unicorn";
+import globals from "globals";
 
 import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
-import { UNICORN_GLOBALS } from "./unicorn.constant.js";
 
 const unicornRules: Linter.RulesRecord = {
   "no-negated-condition": "off",
@@ -189,7 +189,9 @@ export const unicorn: Linter.Config[] = [
   {
     files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     languageOptions: {
-      globals: UNICORN_GLOBALS,
+      globals: {
+        ...globals.builtin,
+      },
     },
     name: "yarapa/unicorn",
     plugins: {

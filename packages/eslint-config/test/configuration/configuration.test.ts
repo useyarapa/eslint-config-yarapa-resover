@@ -1,6 +1,7 @@
 import vitestPlugin from "@vitest/eslint-plugin";
 import packageJsonPlugin from "eslint-plugin-package-json";
 import { rules as perfectionistRules } from "eslint-plugin-perfectionist";
+import globals from "globals";
 import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
@@ -182,6 +183,13 @@ describe("canonical public configuration", () => {
         : false;
     });
     expect(hasBrowserGlobals).toBe(true);
+  });
+
+  it("provides ECMAScript builtin globals through unicorn config", () => {
+    const unicornConfig = yarapa.find(
+      config => config.name === "yarapa/unicorn",
+    );
+    expect(unicornConfig?.languageOptions?.globals).toEqual(globals.builtin);
   });
 
   it("shares canonical handwriting across configuration", () => {
