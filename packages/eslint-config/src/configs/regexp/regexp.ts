@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import regexpPlugin from "eslint-plugin-regexp";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const regexpRules: Linter.RulesRecord = {
   "no-control-regex": "error",
   "no-empty-character-class": "off",
@@ -74,6 +76,7 @@ const regexpRules: Linter.RulesRecord = {
 
 export const regexp: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/regexp",
     plugins: {
       regexp: regexpPlugin,

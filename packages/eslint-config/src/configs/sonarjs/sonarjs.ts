@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import sonarjsPlugin from "eslint-plugin-sonarjs";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const sonarjsRules: Linter.RulesRecord = {
   "sonarjs/anchor-precedence": "error",
   "sonarjs/argument-type": "error",
@@ -317,6 +319,7 @@ const sonarjsRules: Linter.RulesRecord = {
 
 export const sonarjs: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/sonarjs",
     plugins: { sonarjs: sonarjsPlugin },
     rules: sonarjsRules,

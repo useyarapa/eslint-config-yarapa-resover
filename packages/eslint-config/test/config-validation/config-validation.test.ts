@@ -17,4 +17,21 @@ describe("Flat Config validation", () => {
       ),
     ).resolves.toBeDefined();
   });
+
+  it("isolates source and JSON rule scopes", async () => {
+    const eslint = eslintForConfigs(yarapa);
+    const jsonPath = path.resolve(packageRoot, "fixtures/sample.json");
+
+    await expect(
+      eslint.calculateConfigForFile(
+        path.resolve(packageRoot, sampleFiles[0]),
+      ),
+    ).resolves.not.toHaveProperty(["rules", "jsonc/no-dupe-keys"]);
+    await expect(
+      eslint.calculateConfigForFile(jsonPath),
+    ).resolves.toHaveProperty(["rules", "jsonc/no-dupe-keys"]);
+    await expect(
+      eslint.calculateConfigForFile(jsonPath),
+    ).resolves.not.toHaveProperty(["rules", "promise/catch-or-return"]);
+  });
 });

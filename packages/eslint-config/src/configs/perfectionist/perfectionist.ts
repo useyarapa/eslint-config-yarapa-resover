@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import perfectionistPlugin from "eslint-plugin-perfectionist";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const perfectionistRules: Linter.RulesRecord = {
   "perfectionist/sort-array-includes": [
     "error",
@@ -73,6 +75,7 @@ const perfectionistRules: Linter.RulesRecord = {
 
 export const perfectionist: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/perfectionist",
     plugins: { perfectionist: perfectionistPlugin },
     rules: perfectionistRules,

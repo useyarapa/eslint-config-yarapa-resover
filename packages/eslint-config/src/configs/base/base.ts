@@ -1,5 +1,7 @@
 import type { Linter } from "eslint";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const coreRules: Linter.RulesRecord = {
   "constructor-super": "error",
   "for-direction": "error",
@@ -130,10 +132,15 @@ export const base: Linter.Config[] = [
       noInlineConfig: true,
       reportUnusedDisableDirectives: "error",
     },
+    name: "yarapa/base/linter-options",
+  },
+  {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/base/core",
     rules: coreRules,
   },
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/base/modern-js",
     rules: modernJavaScriptRules,
   },

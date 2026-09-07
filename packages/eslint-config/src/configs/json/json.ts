@@ -52,18 +52,14 @@ const json5TrailingCommaRules: Linter.RulesRecord = {
 
 export const json: Linter.Config[] = [
   {
-    name: "yarapa/json/base",
-    plugins: { jsonc: jsoncPlugin },
-  },
-  {
     files: JSON_FILES,
     language: "jsonc/x",
-    name: "yarapa/json/strict-off",
-    rules: jsoncCompatibilityRules,
-  },
-  {
-    name: "yarapa/json/rules",
-    rules: jsoncRules,
+    name: "yarapa/json",
+    plugins: { jsonc: jsoncPlugin },
+    rules: {
+      ...jsoncCompatibilityRules,
+      ...jsoncRules,
+    },
   },
   {
     files: JSON5_FILES,

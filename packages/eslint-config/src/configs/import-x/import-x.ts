@@ -4,6 +4,7 @@ import importXPlugin from "eslint-plugin-import-x";
 
 import {
   JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS,
+  JAVASCRIPT_AND_TYPESCRIPT_FILES,
   TYPESCRIPT_EXTENSIONS,
 } from "../constants/index.js";
 
@@ -31,6 +32,7 @@ const importXSettings: Record<string, unknown> = {
 
 export const importX: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/import-x",
     plugins: { "import-x": importXPlugin },
     rules: importXRules,

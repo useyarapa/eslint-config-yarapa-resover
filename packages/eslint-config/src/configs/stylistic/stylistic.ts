@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import stylisticPlugin from "@stylistic/eslint-plugin";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const MAX_LINE_LENGTH = 80;
 
 const stylisticRules: Linter.RulesRecord = {
@@ -192,6 +194,7 @@ const stylisticRules: Linter.RulesRecord = {
 
 export const stylistic: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/stylistic",
     plugins: { "@stylistic": stylisticPlugin },
     rules: stylisticRules,

@@ -2,6 +2,8 @@ import type { Linter } from "eslint";
 
 import { rules as commentsPluginRules } from "@eslint-community/eslint-plugin-eslint-comments";
 
+import { JAVASCRIPT_AND_TYPESCRIPT_FILES } from "../constants/index.js";
+
 const commentsRules: Linter.RulesRecord = {
   "@eslint-community/eslint-comments/disable-enable-pair": "error",
   "@eslint-community/eslint-comments/no-aggregating-enable": "error",
@@ -13,6 +15,7 @@ const commentsRules: Linter.RulesRecord = {
 
 export const eslintComments: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     name: "yarapa/eslint-comments",
     plugins: {
       "@eslint-community/eslint-comments": {

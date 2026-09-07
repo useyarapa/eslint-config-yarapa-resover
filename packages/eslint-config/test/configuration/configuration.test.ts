@@ -27,6 +27,7 @@ describe("canonical public configuration", () => {
     const configNames = yarapa.map(config => config.name).filter(Boolean);
 
     expect(configNames).toContain("yarapa/base/core");
+    expect(configNames).toContain("yarapa/base/linter-options");
     expect(configNames).toContain("yarapa/base/modern-js");
     expect(configNames).toContain("yarapa/eslint-comments");
     expect(configNames).toContain("yarapa/promise");
@@ -42,11 +43,11 @@ describe("canonical public configuration", () => {
   });
 
   it("enforces zero inline suppression policy via linterOptions", () => {
-    const baseCoreConfig = yarapa.find(
-      config => config.name === "yarapa/base/core",
+    const linterOptionsConfig = yarapa.find(
+      config => config.name === "yarapa/base/linter-options",
     );
 
-    expect(baseCoreConfig?.linterOptions).toEqual({
+    expect(linterOptionsConfig?.linterOptions).toEqual({
       noInlineConfig: true,
       reportUnusedDisableDirectives: "error",
     });
@@ -132,7 +133,7 @@ describe("canonical public configuration", () => {
   it("owns import-x rule and settings policy", () => {
     const config = yarapa.find(c => c.name === "yarapa/import-x");
     expect(config).toBeDefined();
-    expect(config?.rules?.["import-x/no-duplicates"]).toBe("warn");
+    expect(config?.rules?.["import-x/no-duplicates"]).toBe("error");
     expect(config?.settings?.["import-x/resolver"]).toEqual({
       typescript: true,
     });

@@ -3,7 +3,10 @@ import type { Linter } from "eslint";
 import nPlugin from "eslint-plugin-n";
 import globals from "globals";
 
-import { NODE_RESOLUTION_EXTENSIONS } from "../constants/index.js";
+import {
+  JAVASCRIPT_AND_TYPESCRIPT_FILES,
+  NODE_RESOLUTION_EXTENSIONS,
+} from "../constants/index.js";
 
 const nodeRules: Linter.RulesRecord = {
   "n/hashbang": "error",
@@ -29,6 +32,7 @@ const nodeRules: Linter.RulesRecord = {
 
 export const node: Linter.Config[] = [
   {
+    files: JAVASCRIPT_AND_TYPESCRIPT_FILES,
     languageOptions: {
       globals: {
         ...globals.node,
