@@ -10,6 +10,7 @@ import {
 import {
   FRAMEWORK_NAME_ALLOW_LIST,
   REACT_NAME_REPLACEMENTS,
+  UNICORN_STRING_CONTENT_PATTERNS,
 } from "./unicorn.constant.js";
 
 const unicornRules: Linter.RulesRecord = {
@@ -186,7 +187,12 @@ const unicornRules: Linter.RulesRecord = {
   "unicorn/require-number-to-fixed-digits-argument": "error",
   "unicorn/require-passive-events": "error",
   "unicorn/require-post-message-target-origin": "off",
-  "unicorn/string-content": "off",
+  "unicorn/string-content": [
+    "error",
+    {
+      patterns: UNICORN_STRING_CONTENT_PATTERNS,
+    },
+  ],
   "unicorn/switch-case-braces": "error",
   "unicorn/switch-case-break-position": "error",
   "unicorn/template-indent": "error",

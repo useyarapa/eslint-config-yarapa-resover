@@ -14,3 +14,11 @@ export const REACT_NAME_REPLACEMENTS = {
   ref: false,
   refs: false,
 };
+
+export const UNICORN_STRING_CONTENT_PATTERNS = {
+  "\\p{Extended_Pictographic}": {
+    fix: false,
+    message: "Emojis and pictographic symbols are prohibited.",
+    suggest: "",
+  },
+};

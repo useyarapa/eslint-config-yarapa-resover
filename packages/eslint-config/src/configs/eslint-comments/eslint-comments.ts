@@ -10,6 +10,12 @@ const commentsRules: Linter.RulesRecord = {
   "@eslint-community/eslint-comments/no-duplicate-disable": "error",
   "@eslint-community/eslint-comments/no-unlimited-disable": "error",
   "@eslint-community/eslint-comments/no-unused-enable": "error",
+  "@eslint-community/eslint-comments/no-use": [
+    "error",
+    {
+      allow: [],
+    },
+  ],
   "@eslint-community/eslint-comments/require-description": "error",
 };
 

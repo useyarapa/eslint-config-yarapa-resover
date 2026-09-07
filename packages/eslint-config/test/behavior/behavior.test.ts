@@ -340,6 +340,9 @@ describe("shared YARAPA behavior", () => {
     expect(lintResult.messages.map(message => message.ruleId)).toContain(
       "@eslint-community/eslint-comments/require-description",
     );
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@eslint-community/eslint-comments/no-use",
+    );
     expect(
       lintResult.messages.some(message =>
         message.message.includes("'noInlineConfig' setting"),
@@ -422,4 +425,78 @@ describe("shared YARAPA behavior", () => {
       );
     },
   );
+
+  it("reports ts-expect-error comments through ban-ts-comment policy", async () => {
+    const [result] = await eslint.lintText(
+      "// @ts-expect-error explanation of suppression\nexport const value = 1;\n",
+      { filePath: path.resolve(projectRoot, "src/valid.ts") },
+    );
+    const lintResult = required(result, "ts-comment behavior result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "@typescript-eslint/ban-ts-comment",
+    );
+  });
+
+  it("reports implementation declarations in barrel index files", async () => {
+    const [result] = await eslint.lintText(
+      "export const helper = (): number => 42;\n",
+      { filePath: path.resolve(projectRoot, "src/index.ts") },
+    );
+    const lintResult = required(result, "barrel index behavior result");
+    const restrictedSyntax = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-syntax",
+    );
+
+    expect(restrictedSyntax?.message).toContain("Barrel index files");
+  });
+
+  it("accepts pure re-exports in barrel index files", async () => {
+    const [result] = await eslint.lintText(
+      "export { valid } from \"./valid.js\";\n",
+      { filePath: path.resolve(projectRoot, "src/index.ts") },
+    );
+    const lintResult = required(result, "barrel index valid result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).not.toContain(
+      "no-restricted-syntax",
+    );
+  });
+
+  it("reports plain JavaScript files outside fixtures", async () => {
+    const [result] = await eslint.lintText(
+      "export const value = 1;\n",
+      { filePath: path.resolve(projectRoot, "src/plain.js") },
+    );
+    const lintResult = required(result, "plain js behavior result");
+    const restrictedSyntax = lintResult.messages.find(
+      message => message.ruleId === "no-restricted-syntax",
+    );
+
+    expect(restrictedSyntax?.message).toContain("Plain JavaScript files");
+  });
+
+  it("reports emoji and pictographic symbols through unicorn string-content policy", async () => {
+    const [result] = await eslint.lintText(
+      "export const message = \"Hello \u{1F600}\";\n",
+      { filePath: javascriptFixture },
+    );
+    const lintResult = required(result, "emoji behavior result");
+
+    expect(lintResult.messages.map(message => message.ruleId)).toContain(
+      "unicorn/string-content",
+    );
+  });
+
+  it("reports inline comments and warning comments", async () => {
+    const [result] = await eslint.lintText(
+      "export const value = 1; // inline comment\n// TODO: fix later\n",
+      { filePath: javascriptFixture },
+    );
+    const lintResult = required(result, "comment policy behavior result");
+    const ruleIds = lintResult.messages.map(message => message.ruleId);
+
+    expect(ruleIds).toContain("no-inline-comments");
+    expect(ruleIds).toContain("no-warning-comments");
+  });
 });

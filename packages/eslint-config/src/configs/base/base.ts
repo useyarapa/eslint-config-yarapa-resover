@@ -80,7 +80,12 @@ const modernJavaScriptRules: Linter.RulesRecord = {
   "default-param-last": "error",
   "dot-notation": "error",
   eqeqeq: ["error", "always"],
+  "max-lines": [
+    "error",
+    { max: 300, skipBlankLines: true, skipComments: true },
+  ],
   "no-array-constructor": "error",
+  "no-inline-comments": "error",
   "no-object-constructor": "error",
   "no-restricted-imports": [
     "error",
@@ -117,6 +122,10 @@ const modernJavaScriptRules: Linter.RulesRecord = {
     },
   ],
   "no-var": "error",
+  "no-warning-comments": [
+    "error",
+    { location: "anywhere", terms: ["todo", "fixme", "xxx"] },
+  ],
   "object-shorthand": ["error", "always"],
   "prefer-const": "error",
   "prefer-object-has-own": "error",

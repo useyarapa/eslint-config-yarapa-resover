@@ -12,6 +12,13 @@ export const JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS = [
 export const JAVASCRIPT_FILES = JAVASCRIPT_EXTENSIONS.map(
   extension => `**/*${extension}`,
 );
+export const PLAIN_JAVASCRIPT_EXTENSIONS = [".js", ".jsx"];
+export const PLAIN_JAVASCRIPT_FILES = PLAIN_JAVASCRIPT_EXTENSIONS.map(
+  extension => `**/*${extension}`,
+);
+export const INDEX_FILES = JAVASCRIPT_AND_TYPESCRIPT_EXTENSIONS.map(
+  extension => `**/index${extension}`,
+);
 export const REACT_FILES = ["**/*.jsx", "**/*.tsx"];
 export const JSON5_FILES = JSON_EXTENSIONS.filter(
   extension => extension === JSON5_EXTENSION,

@@ -6,6 +6,8 @@ import * as jsoncParser from "jsonc-eslint-parser";
 import { describe, expect, it } from "vitest";
 
 import {
+  INDEX_FILES,
+  PLAIN_JAVASCRIPT_FILES,
   REACT_FILES,
   TYPESCRIPT_TEST_FILES,
 } from "../../src/configs/constants/index.js";
@@ -285,6 +287,69 @@ describe("canonical public configuration", () => {
         vars: "all",
         varsIgnorePattern: "^_",
       },
+    ]);
+  });
+
+  it("enforces strict directive comment and compiler suppression policies", () => {
+    const commentsConfig = yarapa.find(
+      config => config.name === "yarapa/eslint-comments",
+    );
+    expect(
+      commentsConfig?.rules?.["@eslint-community/eslint-comments/no-use"],
+    ).toEqual(["error", { allow: [] }]);
+
+    const tsConfig = yarapa.find(
+      config => config.name === "yarapa/typescript",
+    );
+    expect(
+      tsConfig?.rules?.["@typescript-eslint/ban-ts-comment"],
+    ).toEqual([
+      "error",
+      {
+        minimumDescriptionLength: 10,
+        "ts-check": false,
+        "ts-expect-error": true,
+        "ts-ignore": true,
+        "ts-nocheck": true,
+      },
+    ]);
+  });
+
+  it("enforces barrel-files and plain javascript restrictions", () => {
+    const barrelConfig = required(
+      yarapa.find(config => config.name === "yarapa/typescript/barrel-files"),
+      "barrel files config",
+    );
+    expect(barrelConfig.files).toEqual(INDEX_FILES);
+    expect(barrelConfig.rules?.["no-restricted-syntax"]).toBeDefined();
+
+    const plainJsConfig = required(
+      yarapa.find(config => config.name === "yarapa/typescript/no-plain-js"),
+      "no plain js config",
+    );
+    expect(plainJsConfig.files).toEqual(PLAIN_JAVASCRIPT_FILES);
+    expect(plainJsConfig.ignores).toEqual(["**/fixtures/**"]);
+    expect(plainJsConfig.rules?.["no-restricted-syntax"]).toBeDefined();
+  });
+
+  it("enforces emoji prohibition in unicorn string-content policy", () => {
+    const unicornConfig = required(
+      yarapa.find(config => config.name === "yarapa/unicorn"),
+      "unicorn config",
+    );
+    expect(unicornConfig.rules?.["unicorn/string-content"]).toBeDefined();
+  });
+
+  it("enforces comment policy and file length limits in base config", () => {
+    const baseModernConfig = required(
+      yarapa.find(config => config.name === "yarapa/base/modern-js"),
+      "base modern js config",
+    );
+    expect(baseModernConfig.rules?.["no-inline-comments"]).toBe("error");
+    expect(baseModernConfig.rules?.["no-warning-comments"]).toBeDefined();
+    expect(baseModernConfig.rules?.["max-lines"]).toEqual([
+      "error",
+      { max: 300, skipBlankLines: true, skipComments: true },
     ]);
   });
 });

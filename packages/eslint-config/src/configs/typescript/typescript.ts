@@ -3,6 +3,8 @@ import type { Linter } from "eslint";
 import { parser, plugin } from "typescript-eslint";
 
 import {
+  INDEX_FILES,
+  PLAIN_JAVASCRIPT_FILES,
   TYPESCRIPT_DECLARATION_FILES,
   TYPESCRIPT_FILES,
   TYPESCRIPT_TEST_FILES,
@@ -40,7 +42,7 @@ const typescriptPolicyRules: Linter.RulesRecord = {
     {
       minimumDescriptionLength: 10,
       "ts-check": false,
-      "ts-expect-error": "allow-with-description",
+      "ts-expect-error": true,
       "ts-ignore": true,
       "ts-nocheck": true,
     },
@@ -74,10 +76,39 @@ const typescriptPolicyRules: Linter.RulesRecord = {
   "@typescript-eslint/triple-slash-reference": "error",
 };
 
+const typescriptBarrelRules: Linter.RulesRecord = {
+  "no-restricted-syntax": [
+    "error",
+    {
+      message:
+        "Barrel index files must be pure dispatchers containing only imports and exports.",
+      selector:
+        "Program > :not(ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ExportDefaultDeclaration, EmptyStatement)",
+    },
+    {
+      message:
+        "Barrel index files must re-export symbols rather than declaring implementations.",
+      selector:
+        "ExportNamedDeclaration[declaration!=null], ExportDefaultDeclaration > :not(Identifier)",
+    },
+  ],
+};
+
 const typescriptDeclarationRules: Linter.RulesRecord = {
   "@typescript-eslint/no-empty-object-type": [
     "error",
     { allowInterfaces: "always" },
+  ],
+};
+
+const typescriptPlainJavaScriptRules: Linter.RulesRecord = {
+  "no-restricted-syntax": [
+    "error",
+    {
+      message:
+        "Plain JavaScript files (.js/.jsx) are prohibited. Use TypeScript (.ts/.tsx) or explicit module files (.mjs/.cjs).",
+      selector: "Program",
+    },
   ],
 };
 
@@ -113,9 +144,20 @@ export const typescript: Linter.Config[] = [
     },
   },
   {
+    files: INDEX_FILES,
+    name: "yarapa/typescript/barrel-files",
+    rules: typescriptBarrelRules,
+  },
+  {
     files: TYPESCRIPT_DECLARATION_FILES,
     name: "yarapa/typescript/declaration-files",
     rules: typescriptDeclarationRules,
+  },
+  {
+    files: PLAIN_JAVASCRIPT_FILES,
+    ignores: ["**/fixtures/**"],
+    name: "yarapa/typescript/no-plain-js",
+    rules: typescriptPlainJavaScriptRules,
   },
   {
     files: TYPESCRIPT_TEST_FILES,
