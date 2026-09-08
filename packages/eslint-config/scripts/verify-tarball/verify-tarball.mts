@@ -116,7 +116,7 @@ export function verifyTarball(): void {
         "",
         EXPECT_RULE_CALL,
         "  yarapa,",
-        `  "sample-invalid.js",`,
+        `  "sample-invalid.mjs",`,
         String.raw`  "export function value() { var answer = 42; return answer; }\n",`,
         `  "no-var",`,
         ");",
@@ -173,7 +173,7 @@ export function verifyTarball(): void {
     );
 
     writeFileSync(
-      path.resolve(consumerDirectory, "sample.js"),
+      path.resolve(consumerDirectory, "sample.mjs"),
       "export const answer = 42;\n",
     );
 
@@ -184,7 +184,7 @@ export function verifyTarball(): void {
 
     run(node, ["verify.mjs"], consumerDirectory);
     run(node, ["verify-behavior.mjs"], consumerDirectory);
-    run(pnpm, ["exec", "eslint", "sample.js", "sample.ts"], consumerDirectory);
+    run(pnpm, ["exec", "eslint", "sample.mjs", "sample.ts"], consumerDirectory);
   } finally {
     rmSync(temporaryRoot, { force: true, recursive: true });
   }
