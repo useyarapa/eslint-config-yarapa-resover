@@ -13,13 +13,13 @@ export default defineConfig(
   ),
   yarapa,
   {
-    files: ["packages/eslint-config/**/*.ts"],
+    files: ["packages/eslint-config/**/*.{ts,mts}"],
     name: "yarapa/repository/typescript-emit-resolution",
     rules: {
       "n/no-missing-import": [
         "error",
         {
-          typescriptExtensionMap: [[".ts", ".js"]],
+          typescriptExtensionMap: "preserve",
         },
       ],
     },
