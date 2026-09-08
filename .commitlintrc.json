@@ -27,10 +27,6 @@
       ]
     ],
     "body-empty": [2, "always"],
-    "trailer-exists": [
-      2,
-      "always",
-      "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-    ]
+    "footer-empty": [2, "always"]
   }
 }

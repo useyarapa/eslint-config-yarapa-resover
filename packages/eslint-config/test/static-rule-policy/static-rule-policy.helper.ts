@@ -10,7 +10,7 @@ export const FORBIDDEN_CONFIG_PATTERNS = [
 /**
  * Inspect config files under directory for forbidden pattern violations.
  * @param configsDirectory Path to directory containing production config
- *   subdirectories.
+ * subdirectories.
  * @param patterns Prohibited patterns in production configs.
  * @returns Array of formatted violation strings.
  */

@@ -9,6 +9,7 @@
     "module": "NodeNext",
     "moduleDetection": "force",
     "moduleResolution": "NodeNext",
+    "noEmit": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "dist",
     "rootDir": ".",
