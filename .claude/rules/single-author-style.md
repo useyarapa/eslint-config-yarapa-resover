@@ -25,11 +25,8 @@ Write code as if one careful engineer owns the entire repository. Similar code s
 
 ## Consistent Tests
 
-- Give similar tests the same Arrange, Act, and Assert shape.
-- Parameterize cases that differ only by data, input, or supported variant.
-- Use the repository's shared test setup and helpers for equivalent tests.
-- Assert stable public behavior and diagnostics, not incidental implementation details.
-- Keep fixtures, test names, and failure messages parallel with the behavior they verify.
+- Keep tests owned by the same contract consistent in Arrange, Act, Assert, naming, and diagnostic phrasing.
+- Base symmetry on shared semantics; do not reshape unrelated tests solely to make their file skeletons match.
 
 ## Consistent Changes
 

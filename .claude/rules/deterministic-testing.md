@@ -13,6 +13,7 @@ Keep tests as small, deterministic protections for observable contracts. A sourc
 
 - Name the contract and the distinct defect a proposed test can detect before writing it.
 - Admit tests only for externally observable behavior, public contracts, demonstrated regressions, non-trivial invariants, meaningful failure modes, or an explicit repository verification requirement.
+- For a changed preset contract, existing and new coverage together must distinguish its configuration shape and at least one observable lint behavior; add nothing when current cases already detect both.
 - Reject tests that restate static guarantees, assert implementation details, exercise impossible states, or increase coverage without increasing defect detection.
 - Treat coverage percentage as a measurement, not a reason to add tests.
 - Leave tests unchanged when no proposed case survives admission.

@@ -15,12 +15,6 @@ Eliminate semantic, conceptual, and architectural redundancy across code, tests,
 - Do not create multiple variants of an operation when a single parameterized function satisfies all valid use cases.
 - Separate concerns cleanly: assign clear, non-overlapping ownership to each module, profile, and capability.
 
-## Test and Verification Redundancy
-
-- Do not write repetitive tests that assert identical execution paths with trivial data variations; parameterize via tables (`it.each`).
-- Reuse canonical test helpers and declarative fixtures instead of creating bespoke setup logic in individual test files.
-- Ensure every test verifies a distinct failure mode, behavioral contract, or regression boundary.
-
 ## Semantic and Explanatory Redundancy
 
 - Do not write comments or documentation that restate what well-named identifiers already make obvious.
@@ -31,4 +25,3 @@ Eliminate semantic, conceptual, and architectural redundancy across code, tests,
 
 - Inspect changed files to confirm no duplicate logic, redundant wrappers, or parallel abstractions were introduced.
 - Verify that common functionality is referenced from a single canonical source rather than duplicated.
-- Confirm tests parameterize shared scenarios rather than repeating boilerplate assertions.
