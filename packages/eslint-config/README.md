@@ -1,0 +1,179 @@
+# @yarapa/eslint-config
+
+[![npm version](https://img.shields.io/npm/v/%40yarapa%2Feslint-config.svg?color=cb3837)](https://www.npmjs.com/package/@yarapa/eslint-config)
+[![npm downloads](https://img.shields.io/npm/dm/%40yarapa%2Feslint-config.svg)](https://www.npmjs.com/package/@yarapa/eslint-config)
+[![node version](https://img.shields.io/badge/node-%3E%3D24.15.0-brightgreen.svg)](https://nodejs.org)
+[![license](https://img.shields.io/github/license/useyarapa/eslint-config-yarapa.svg)](https://github.com/useyarapa/eslint-config-yarapa/blob/main/LICENSE)
+
+Opinionated, deterministic ESLint Flat Config standards for modern JavaScript and TypeScript projects.
+
+`@yarapa/eslint-config` provides a shared, zero-compromise linting baseline across modern JavaScript, TypeScript, and Node.js. All capabilities are bundled into a single unified Flat Config.
+
+---
+
+## Features
+
+- **Strict Flat Config First**: Pre-configured, deterministic arrays built for ESLint 10+.
+- **Unified Baseline**: Integrates JavaScript, TypeScript, Node.js runtime (`eslint-plugin-n`), and Node/Browser globals in one setup.
+- **Type-Aware First**: Native integration with TypeScript's `projectService` for accurate, AST-driven type analysis without manual `tsconfig.json` overhead.
+- **Unified Style**: Integrated `@stylistic/eslint-plugin` rules with zero format suppression allowed.
+- **Natural Ordering**: Automated, deterministic sorting of imports, exports, and object keys via `eslint-plugin-perfectionist`.
+- **Security & Bug Prevention**: Built-in cognitive complexity analysis and anti-ReDoS rules with `eslint-plugin-sonarjs` and `eslint-plugin-regexp`.
+
+---
+
+## Requirements
+
+- **Node.js**: `>=24.15.0 <25`
+- **ESLint**: `^10.0.0`
+- **TypeScript**: `>=5.0.0 <6.1.0` (for TypeScript projects)
+
+---
+
+## Installation
+
+Install `@yarapa/eslint-config` along with required peer dependencies:
+
+```sh
+pnpm add -D eslint @yarapa/eslint-config typescript
+```
+
+Or using npm / yarn:
+
+```sh
+npm install --save-dev eslint @yarapa/eslint-config typescript
+# or
+yarn add -D eslint @yarapa/eslint-config typescript
+```
+
+---
+
+## Quick Start
+
+Create an `eslint.config.mjs` in the root of your project:
+
+```js
+import yarapa from "@yarapa/eslint-config";
+
+export default yarapa;
+```
+
+---
+
+## Configuration Architecture
+
+`@yarapa/eslint-config` exports a single static Flat Config array containing all capability layers:
+
+| Capability Layer     | Scope / Files                  | Key Inclusions                                          |
+| -------------------- | ------------------------------ | ------------------------------------------------------- |
+| Universal JavaScript | All matching files             | Core JS, modern builtins, imports (`import-x`), SonarJS |
+| Node.js Runtime      | All matching files             | Node globals, `eslint-plugin-n` runtime checks          |
+| Browser Environment  | All matching files             | Browser globals                                         |
+| TypeScript Syntax    | `**/*.{ts,tsx,mts,cts}`        | `@typescript-eslint` syntax and hygiene policies        |
+| Type-Checked Rules   | `**/*.{ts,tsx,mts,cts}`        | `projectService` type-aware analysis                    |
+| Style & Formatting   | All matching files             | Stylistic rules, Perfectionist natural sorting, Unicorn |
+| Structural Data      | `**/*.json`, `**/package.json` | `@eslint/json`, `eslint-plugin-package-json`            |
+
+All rules are deterministic and do not mutate based on ambient runtime conditions.
+
+For full architecture details and rule philosophies, refer to the [Architecture & Rules Overview](docs/RULES.md).
+
+---
+
+## Formatting & Prettier Integration
+
+`@yarapa/eslint-config` includes deterministic code styling via `@stylistic/eslint-plugin` (semi, quotes, 2-space indentation, max line length).
+
+- Run ESLint directly with `--fix` to format and lint your entire repository deterministically.
+- **If using Prettier**: If your workflow requires Prettier for non-JS files (e.g. Markdown, CSS, HTML), ensure that Prettier is configured with matching options:
+  - `"semi": true`
+  - `"singleQuote": false`
+  - `"tabWidth": 2`
+  - `"trailingComma": "all"`
+
+---
+
+## Editor Integration
+
+### Visual Studio Code
+
+1. Install the official [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+2. Configure `.vscode/settings.json`:
+
+```json
+{
+  "eslint.useFlatConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
+}
+```
+
+### JetBrains IDEs (WebStorm / IntelliJ IDEA)
+
+1. Open **Settings / Preferences** (`Cmd+,` or `Ctrl+Alt+S`) → **Languages & Frameworks** → **JavaScript** → **Code Quality Tools** → **ESLint**.
+2. Select **Manual ESLint configuration**.
+3. Choose your Node.js interpreter and set **ESLint package** to your project's local `eslint` package.
+4. Check **Run eslint --fix on save**.
+
+### Neovim
+
+Using `nvim-lspconfig` and `null-ls` / `conform.nvim` with ESLint Language Server (`eslint-lsp`):
+
+```lua
+-- Using conform.nvim or nvim-lspconfig
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
+  command = "EslintFixAll",
+})
+```
+
+---
+
+## Architectural Comparison
+
+Wondering how YARAPA compares to industry standards like `@antfu/eslint-config`, Airbnb, Vercel, Shopify, and Google (`gts`)? Read our comprehensive [Global Landscape & Architectural Comparison](docs/COMPARISON.md) covering determinism, type-aware defaults, anti-ReDoS security, and zero-suppression engineering standards.
+
+---
+
+## Monorepo & Troubleshooting FAQ
+
+### 1. `projectService` fails to find `tsconfig.json`
+
+When running type-aware rules, ESLint must resolve project configuration relative to your project's `tsconfig.json`.
+
+**Solution**: Run ESLint from the root directory containing your `tsconfig.json`:
+
+```sh
+pnpm exec eslint .
+```
+
+### 2. Can I use `eslint-disable` comments?
+
+Inline rule suppressions are disabled at the engine level (`noInlineConfig: true`). Fix diagnostics at their source rather than suppressing them with inline directives. If you need to ignore specific generated artifacts or third-party outputs, declare them using standard ESLint `ignores` in your `eslint.config.mjs`.
+
+---
+
+## Inspecting Active Rules
+
+To visually explore every rule, plugin, and active configuration:
+
+```sh
+pnpm dlx @eslint/config-inspector
+```
+
+---
+
+## License
+
+[MIT](https://github.com/useyarapa/eslint-config-yarapa/blob/main/LICENSE) (c) YARAPA
